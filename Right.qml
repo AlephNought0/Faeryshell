@@ -9,6 +9,8 @@ RowLayout {
     spacing: 10
     anchors.right: parent.right
 
+    readonly property int layoutSpacing: layout.spacing
+
     Rectangle { //Audio
         id: audio
         width: 110
@@ -59,18 +61,12 @@ RowLayout {
             hoverEnabled: true
 
             onEntered: {
-                console.log("Layout:", layout.width)
-                console.log("System:", sys.width)
-                console.log("Audio:", audio.width)
                 parent.color = "grey"
                 test.running = true;
                 expand.running = true;
             }
 
             onExited: {
-                console.log("Layout:", layout.width)
-                console.log("System:", sys.width)
-                console.log("Audio:", audio.width)
                 parent.color = "purple"
                 untest.running = true;
                 retract.running = true;
@@ -78,11 +74,14 @@ RowLayout {
         }
 
         RowLayout {
+            id: systemContent
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
             width: parent.width - 20
             spacing: 4
             clip: true
+
+            readonly property int sySpacing: systemContent.spacing
 
             Rectangle {
                 height: parent.height
@@ -113,7 +112,7 @@ RowLayout {
             }
 
             Text {
-                text: "11:00"
+                text: Singl.formattedHours
                 color: "white"
                 font.pixelSize: 16  
                 font.weight: 550
@@ -121,7 +120,7 @@ RowLayout {
 
             Text {
                 id: hiddenText
-                text: "Mon, 07 April 2024"
+                text: Singl.formattedDate
                 color: "white"
                 font.pixelSize: 16  
                 font.weight: 550
@@ -131,9 +130,8 @@ RowLayout {
                 id: expand
                 target: sys
                 property: "width"
-                to: sys.originalWidth + hiddenText.width + 4
-                duration: 300
-                easing.type: Easing.InOutQuad
+                to: sys.originalWidth + hiddenText.width + systemContent.sySpacing
+                duration: 200
             }
 
             NumberAnimation {
@@ -141,17 +139,15 @@ RowLayout {
                 target: sys
                 property: "width"
                 to: sys.originalWidth
-                duration: 300
-                easing.type: Easing.InOutQuad
+                duration: 200
             }
 
             NumberAnimation {
                 id: test
                 target: layout
                 property: "width"
-                to: audio.width + sys.originalWidth + hiddenText.width + 14
-                duration: 300
-                easing.type: Easing.InOutQuad
+                to: audio.width + sys.originalWidth + hiddenText.width + systemContent.sySpacing + layout.layoutSpacing
+                duration: 200
             }
 
             NumberAnimation {
@@ -159,8 +155,7 @@ RowLayout {
                 target: layout
                 property: "width"
                 to: audio.width + sys.originalWidth + 10
-                duration: 300
-                easing.type: Easing.InOutQuad
+                duration: 200
             }
         }
     }

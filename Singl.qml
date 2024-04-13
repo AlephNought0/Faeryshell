@@ -10,6 +10,8 @@ Singleton {
     property string workspace
     property string currDate
     property string currTime
+    property string formattedHours
+    property string formattedDate
 
     Socket {
         path: `/tmp/hypr/${Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")}/.socket2.sock`
@@ -85,33 +87,27 @@ Singleton {
             onRead: data => temp = data.replace("+", "")
         }
     }
-
-    Process {
-        id: time
-        running: true
-
-        Component.onCompleted: {
-            var currentDate = new Date()
-            var day = currentDate.getDate()
-            var month = currentDate.getMonth() + 1
-            var year = currentDate.getFullYear()
-
-            currTime = currentDate.toLocaleTimeString("t")
-            currDate = day + "." + month + "." + year
-
-            console.log(currTime)
-        }
-    }
     
 
     Timer {
-        interval: 600000
+        interval: 1000
         running: true
         repeat: true
         onTriggered: {
             icons.running = true
             temperature.running = true
-            time.running = true
+
+            var now = new Date();
+            var day = now.getDay(); // Get day of the week (0-6)
+            var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            var month = now.getMonth(); // Get month (0-11)
+            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+            // Format the date string
+            formattedHours = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes()
+            formattedDate = days[day] + ', ' + (now.getDate() < 10 ? '0' : '') + now.getDate() + ' ' + months[month] + ' ' + now.getFullYear();
+
+            console.log(formattedDate);
         } 
     }
 }
