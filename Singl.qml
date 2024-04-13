@@ -106,8 +106,6 @@ Singleton {
             // Format the date string
             formattedHours = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes()
             formattedDate = days[day] + ', ' + (now.getDate() < 10 ? '0' : '') + now.getDate() + ' ' + months[month] + ' ' + now.getFullYear();
-
-            console.log(formattedDate);
         } 
     }
 }

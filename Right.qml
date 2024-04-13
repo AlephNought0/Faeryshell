@@ -132,6 +132,7 @@ RowLayout {
                 property: "width"
                 to: sys.originalWidth + hiddenText.width + systemContent.sySpacing
                 duration: 200
+                easing.type: Easing.OutQuad
             }
 
             NumberAnimation {
@@ -140,6 +141,7 @@ RowLayout {
                 property: "width"
                 to: sys.originalWidth
                 duration: 200
+                easing.type: Easing.OutQuad
             }
 
             NumberAnimation {
@@ -148,6 +150,7 @@ RowLayout {
                 property: "width"
                 to: audio.width + sys.originalWidth + hiddenText.width + systemContent.sySpacing + layout.layoutSpacing
                 duration: 200
+                easing.type: Easing.OutQuad
             }
 
             NumberAnimation {
@@ -156,6 +159,7 @@ RowLayout {
                 property: "width"
                 to: audio.width + sys.originalWidth + 10
                 duration: 200
+                easing.type: Easing.OutQuad
             }
         }
     }
