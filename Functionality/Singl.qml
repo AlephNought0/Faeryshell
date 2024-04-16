@@ -7,31 +7,10 @@ import QtQuick
 Singleton {
     property string icon
     property string temp
-    property string workspace
-    property string currDate
-    property string currTime
-    property string formattedHours
+    property string formattedHours: "12:00"
     property string formattedDate
 
-    Socket {
-        path: `/tmp/hypr/${Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")}/.socket2.sock`
-		connected: true
-
-        parser: SplitParser {
-
-            property var regex: new RegExp("workspace>>(.)");
-            
-            onRead: msg => {
-                const match = regex.exec(msg);
-
-                if(match != null) {
-                    workspace = match[1];
-                }
-            }
-        }
-    }
-
-    Process {
+    Process { //Weather
         id: icons
         command: ["sh", "-c", "curl wttr.in/?format=%C"]
         running: true
@@ -51,14 +30,6 @@ Singleton {
                             icon = "icons/sunny_light_raining.svg"
                             break;
 
-                    case "Mist":
-                        icon = "icons/mist.svg"
-                        break;
-
-                    case "Patchy rain nearby":
-                        icon = "icons/sunny_cloudy.svg"
-                        break;
-
                     case "Partly cloudy":
                         icon = "icons/sunny_cloudy.svg"
                         break;
@@ -77,7 +48,7 @@ Singleton {
         }
     }
 
-    Process {
+    Process { //Temperature
         id: temperature
         command: ["sh", "-c", "curl wttr.in/?format=%t"]
         running: true

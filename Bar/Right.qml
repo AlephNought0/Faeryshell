@@ -2,6 +2,7 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 import QtCore
+import "../Functionality"
 
 RowLayout {
     id: layout
@@ -46,13 +47,13 @@ RowLayout {
 
     Rectangle { //System
         id: sys
-        width: 120
+        width: 125
         height: parent.height - 5
         radius: 10
         color: "purple"
         anchors.right: parent.right
 
-        readonly property int originalWidth: 120
+        readonly property int originalWidth: 125
 
         MouseArea {
             anchors.centerIn: parent
@@ -62,13 +63,13 @@ RowLayout {
 
             onEntered: {
                 parent.color = "grey"
-                test.running = true;
+                lExpand.running = true;
                 expand.running = true;
             }
 
             onExited: {
                 parent.color = "purple"
-                untest.running = true;
+                lRetract.running = true;
                 retract.running = true;
             }
         }
@@ -78,12 +79,13 @@ RowLayout {
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
             width: parent.width - 20
-            spacing: 4
+            spacing: 10
             clip: true
 
             readonly property int sySpacing: systemContent.spacing
 
             Rectangle {
+                id: battery
                 height: parent.height
                 width: childrenRect.width
                 color: "transparent"
@@ -93,25 +95,28 @@ RowLayout {
                     width: sourceSize.width * (height / sourceSize.height)
                     height: parent.height - 5
                     fillMode: Image.PreserveAspectFit
-                    source: "icons/battery.svg"
+                    source: "../icons/battery.svg"
                 }
             }
 
             Rectangle {
-                height: parent.height
+                id: internet
+                height: parent.height - 5
                 width: childrenRect.width
                 color: "transparent"
 
                 Image {
+                    id: test
                     anchors.verticalCenter: parent.verticalCenter
+                    height: parent.height - 5
                     width: sourceSize.width * (height / sourceSize.height)
-                    height: parent.height - 8
                     fillMode: Image.PreserveAspectFit
-                    source: "icons/wifi_medium.svg"
+                    source: Signal.icon
                 }
             }
 
             Text {
+                id: hours
                 text: Singl.formattedHours
                 color: "white"
                 font.pixelSize: 16  
@@ -145,7 +150,7 @@ RowLayout {
             }
 
             NumberAnimation {
-                id: test
+                id: lExpand
                 target: layout
                 property: "width"
                 to: audio.width + sys.originalWidth + hiddenText.width + systemContent.sySpacing + layout.layoutSpacing
@@ -154,7 +159,7 @@ RowLayout {
             }
 
             NumberAnimation {
-                id: untest
+                id: lRetract
                 target: layout
                 property: "width"
                 to: audio.width + sys.originalWidth + 10
