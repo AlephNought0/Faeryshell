@@ -17,6 +17,7 @@ RowLayout {
         width: 110
         height: parent.height - 5
         radius: 10
+        anchors.left: parent.left
         color: "purple"
 
         MouseArea {
@@ -48,6 +49,7 @@ RowLayout {
         id: sys
         width: 125
         height: parent.height - 5
+        anchors.right: parent.right
         radius: 10
         color: "purple"
 
@@ -87,6 +89,10 @@ RowLayout {
                 height: parent.height - 3
                 width: 25
 
+                function repaintCanvas() {
+                    requestPaint()
+                }
+
                 onPaint: {
                     var ctx = getContext("2d");
         
@@ -97,9 +103,15 @@ RowLayout {
                     ctx.fillRect(5.5, 10, Battery.capacity, battery.height - 20);
                 }
 
+                Connections {
+                    target: Battery
+                    onCapacityChanged: battery.repaintCanvas()
+                }
+
                 Image {
                     id: skibidi
                     parent: null
+                    anchors.verticalCenter: parent.verticalCenter
                     width: battery.width
                     height: battery.height
                     fillMode: Image.PreserveAspectFit
@@ -116,8 +128,7 @@ RowLayout {
                 Image {
                     id: test
                     anchors.verticalCenter: parent.verticalCenter
-                    height: parent.height - 5
-                    width: sourceSize.width * (height / sourceSize.height)
+                    sourceSize.height: parent.height - 5
                     fillMode: Image.PreserveAspectFit
                     source: Signal.icon
                 }

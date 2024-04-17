@@ -9,24 +9,23 @@ Singleton {
     property real capacity
 
     Process {
-        id: capacity
+        id: bat
         running: true
         command: ["sh", "-c", "cat /sys/class/power_supply/BAT0/capacity"]
 
         stdout: SplitParser {
             onRead: data => {
                 root.capacity = parseInt(data) * (13 / 100)
-                console.log(root.capacity)
             }
         }
     }
 
     Timer {
-        interval: 1000
+        interval: 5000
         running: true
         repeat: true
         onTriggered: {
-            capacity.running = true
+            bat.running = true
         }
     }
 }

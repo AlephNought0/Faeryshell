@@ -50,8 +50,8 @@ RowLayout {
 
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
-                        width: sourceSize.width * (height / sourceSize.height)
-                        height: parent.height - 15
+                        sourceSize.width: 15
+                        sourceSize.height: parent.height - 16
                         fillMode: Image.PreserveAspectFit
                         source: "../icons/ram.svg"
                     }
@@ -76,8 +76,8 @@ RowLayout {
 
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
-                        width: sourceSize.width * (height / sourceSize.height)
-                        height: parent.height - 13
+                        sourceSize.width: 15
+                        sourceSize.height: parent.height - 12
                         fillMode: Image.PreserveAspectFit
                         source: "../icons/cpu.svg"
                     }
