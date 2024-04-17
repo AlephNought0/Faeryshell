@@ -18,7 +18,6 @@ RowLayout {
         height: parent.height - 5
         radius: 10
         color: "purple"
-        anchors.left: parent.left
 
         MouseArea {
             anchors.centerIn: parent
@@ -51,7 +50,6 @@ RowLayout {
         height: parent.height - 5
         radius: 10
         color: "purple"
-        anchors.right: parent.right
 
         readonly property int originalWidth: 125
 
@@ -84,16 +82,26 @@ RowLayout {
 
             readonly property int sySpacing: systemContent.spacing
 
-            Rectangle {
+            Canvas {
                 id: battery
-                height: parent.height
-                width: childrenRect.width
-                color: "transparent"
+                height: parent.height - 3
+                width: 25
+
+                onPaint: {
+                    var ctx = getContext("2d");
+        
+                    ctx.beginPath();
+                    ctx.stroke();
+
+                    ctx.fillStyle = "white";
+                    ctx.fillRect(5.5, 10, Battery.capacity, battery.height - 20);
+                }
 
                 Image {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: sourceSize.width * (height / sourceSize.height)
-                    height: parent.height - 5
+                    id: skibidi
+                    parent: null
+                    width: battery.width
+                    height: battery.height
                     fillMode: Image.PreserveAspectFit
                     source: "../icons/battery.svg"
                 }
