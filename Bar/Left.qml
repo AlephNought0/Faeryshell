@@ -5,8 +5,7 @@ import "../Functionality"
 
 
 RowLayout {
-    height: parent.height
-    width: childrenRect.width
+    height: 35
     anchors.left: parent.left
     spacing: 10
 

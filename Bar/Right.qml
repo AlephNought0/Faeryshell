@@ -6,7 +6,7 @@ import "../Functionality"
 
 RowLayout {
     id: layout
-    height: parent.height
+    height: 35
     spacing: 10
     anchors.right: parent.right
 
@@ -126,7 +126,6 @@ RowLayout {
                 color: "transparent"
 
                 Image {
-                    id: test
                     anchors.verticalCenter: parent.verticalCenter
                     sourceSize.height: parent.height - 5
                     fillMode: Image.PreserveAspectFit

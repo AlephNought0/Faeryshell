@@ -14,7 +14,7 @@ Singleton {
     Process {
         id: mem
         running: true
-        command: ["sh", "-c", "cat cat /proc/meminfo"]
+        command: ["cat", "/proc/meminfo"]
 
         stdout: SplitParser {
             splitMarker: ""

@@ -3,7 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 
 Item {
-    height: parent.height
+    height: 35
     width: 140
 
     Rectangle {

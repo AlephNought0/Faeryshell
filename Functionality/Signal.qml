@@ -17,7 +17,7 @@ Singleton {
     Process {
         id: interfaces
         running: true
-        command: ["sh", "-c", "nmcli --get-values GENERAL.DEVICE,GENERAL.TYPE device show"]
+        command: ["nmcli", "--get-values", "GENERAL.DEVICE,GENERAL.TYPE", "device", "show"]
 
         stdout: SplitParser {
             splitMarker: ""
@@ -40,7 +40,7 @@ Singleton {
     Process {
         id: ethernetState
         running: true
-        command: ["sh", "-c", "cat /sys/class/net/" + root.ethernetInt + "/operstate"]
+        command: ["cat", "/sys/class/net/" + root.ethernetInt + "/operstate"]
 
         stdout: SplitParser {
             splitMarker: ""
@@ -61,7 +61,7 @@ Singleton {
     Process {
         id: wifiState
         running: true
-        command: ["sh", "-c", "cat /sys/class/net/" + root.wifiInt + "/operstate"]
+        command: ["cat", "/sys/class/net/" + root.wifiInt + "/operstate"]
 
         stdout: SplitParser {
             splitMarker: ""
@@ -82,7 +82,7 @@ Singleton {
     Process {
         id: wifiSignal
         running: true
-        command: ["sh", "-c", "cat /proc/net/wireless"]
+        command: ["cat", "/proc/net/wireless"]
 
         stdout: SplitParser {
             splitMarker: ""

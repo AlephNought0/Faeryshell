@@ -2,38 +2,32 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 
-Item {
-    height: parent.height
+Rectangle {
     width: 180
+    height: 30
+    radius: 10
+    color: "purple"
 
-    Rectangle {
+    MouseArea {
         anchors.centerIn: parent
         width: parent.width
-        height: parent.height - 5
-        radius: 10
-        color: "purple"
+        height: parent.height
+        hoverEnabled: true
 
-        MouseArea {
-            anchors.centerIn: parent
-            width: parent.width
-            height: parent.height
-            hoverEnabled: true
-
-            onEntered: {
-                parent.color = "grey"
-            }
-
-            onExited: {
-                parent.color = "purple"
-            }
+        onEntered: {
+            parent.color = "grey"
         }
 
-        Text {
-            anchors.centerIn: parent
-            text: "Tray"
-            color: "white"
-            font.pixelSize: 16
-            font.weight: 550
+        onExited: {
+            parent.color = "purple"
         }
+    }
+
+    Text {
+        anchors.centerIn: parent
+        text: "Tray"
+        color: "white"
+        font.pixelSize: 16
+        font.weight: 550
     }
 }

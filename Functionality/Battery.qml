@@ -11,7 +11,7 @@ Singleton {
     Process {
         id: bat
         running: true
-        command: ["sh", "-c", "cat /sys/class/power_supply/BAT0/capacity"]
+        command: ["cat", "/sys/class/power_supply/BAT0/capacity"]
 
         stdout: SplitParser {
             onRead: data => {

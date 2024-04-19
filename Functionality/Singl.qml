@@ -12,7 +12,7 @@ Singleton {
 
     Process { //Weather
         id: icons
-        command: ["sh", "-c", "curl wttr.in/?format=%C"]
+        command: ["curl", "wttr.in/?format=%C"]
         running: true
 
         stdout: SplitParser {
@@ -50,7 +50,7 @@ Singleton {
 
     Process { //Temperature
         id: temperature
-        command: ["sh", "-c", "curl wttr.in/?format=%t"]
+        command: ["curl", "wttr.in/?format=%t"]
         running: true
 
         stdout: SplitParser {

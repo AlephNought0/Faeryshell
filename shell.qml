@@ -3,7 +3,9 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Quickshell.Wayland
 import "Bar"
+import "Bar/Media"
 import "Functionality"
 
 ShellRoot {
@@ -13,12 +15,14 @@ ShellRoot {
         delegate: Component {
             
             PanelWindow {
+                id: panel
+
                 anchors {
                     top: true
                     left: true
                     right: true
                 }
-                
+
                 property var modelData
                 screen: modelData
 
@@ -30,6 +34,13 @@ ShellRoot {
                 Media{}
 
                 Right{}
+
+                LazyLoader {
+                    id: mediaPopup
+                    loading: true
+
+                    Interface{}
+                }
             }
         }
     }
