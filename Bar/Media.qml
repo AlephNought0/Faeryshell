@@ -40,7 +40,6 @@ Rectangle {
         height: parent.height
         width: parent.width - 20
         anchors.centerIn: parent
-        spacing: 10
         clip: true
 
         Rectangle {
@@ -78,24 +77,35 @@ Rectangle {
                 } 
             }
 
+            Timer {
+                id: textCheck
+                interval: 200
+                running: false
+                onTriggered: {
+                    if(title.width > parent.width - icon.width + 10) {
+                        title.anchors.horizontalCenter = undefined
+                        timer.running = true
+                    }
+
+                    else {
+                        parent.step = 0
+                        title.anchors.horizontalCenter = parent.horizontalCenter
+                        timer.running = false
+                    }
+                } 
+            }
+
             Text {
                 id: title
                 text: parent.display
                 anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: 16  
-                font.weight: 550
+                font.pixelSize: 14
+                font.weight: 650
+                font.family: Main.fontSource
                 color: "white"
 
                 onWidthChanged: {
-                    if(title.width > parent.width - icon.width + 10) {
-                        timer.running = true
-                        anchors.horizontalCenter = undefined
-                    }
-
-                    else {
-                        timer.running = false
-                        anchors.horizontalCenter = parent.horizontalCenter
-                    }
+                    textCheck.running = true
                 }
             }
         }

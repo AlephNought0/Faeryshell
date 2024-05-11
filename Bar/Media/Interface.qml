@@ -65,11 +65,12 @@ PopupWindow {
         }
 
         Rectangle {
+            id: mediaImage
             width: 200
             height: parent.height
             color: "purple"
             radius: 10
-            z: 1
+            z: 2
 
             Image {
                 id: sourceItem
@@ -78,7 +79,7 @@ PopupWindow {
                 width: parent.width
                 height: parent.height
                 visible: false
-                z: 1
+                z: 2
             }
 
             MultiEffect {
@@ -86,7 +87,7 @@ PopupWindow {
                 anchors.fill: sourceItem
                 maskEnabled: true
                 maskSource: mask
-                z: 1
+                z: 2
             }
 
             Item {
@@ -95,24 +96,25 @@ PopupWindow {
                 height: sourceItem.height
                 layer.enabled: true
                 visible: false
-                z: 1
+                z: 2
 
                 Rectangle {
                     width: sourceItem.width
                     height: sourceItem.height
                     radius: 10
                     color: "black"
-                    z: 1
+                    z: 2
                 }
             }
         }
 
         Rectangle {
+            id: mediaControls
             width: 70
             height: parent.height
             radius: 10
             x: sourceItem.width - 15
-            z: 0
+            z: 1
             color: "pink"
 
             ColumnLayout {
@@ -223,6 +225,149 @@ PopupWindow {
                         height: parent.height - 10
                         anchors.centerIn: parent
                         source: "../../icons/forward.svg"
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            height: parent.height
+            width: parent.width
+            radius: 10
+            z: 0
+            color: "#005C6F"
+
+            ColumnLayout {
+                height: 200
+                width: parent.width - mediaImage.width - mediaControls.width
+                anchors.right: parent.right
+
+                Rectangle {
+                    width: parent.width - 50
+                    height: childrenRect.height + 25
+                    Layout.alignment: Qt.AlignTop
+                    color: "transparent"
+
+                    Image {
+                        id: currMedia
+                        sourceSize.width: 15
+                        sourceSize.height: 15
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "../../icons/chromium.svg"
+                    }
+
+                    Text {
+                        id: mediaIcon
+                        text: "chromium"
+                        anchors.verticalCenter: parent.verticalCenter
+                        x: currMedia.width + 5
+                        font.pixelSize: 14
+                        font.weight: 650
+                        font.family: Main.fontSource
+                        color: "white"
+                    }
+
+                    Text {
+                        text: Mpris.timeStatus
+                        anchors.verticalCenter: parent.verticalCenter
+                        x: currMedia.width + mediaIcon.width + 10
+                        font.pixelSize: 14
+                        font.weight: 650
+                        font.family: Main.fontSource
+                        color: "white"
+                    }
+                }
+
+                Item {
+                    id: middleText
+                    height: childrenRect.height + 10
+                    width: parent.height + 20
+                    anchors.verticalCenter: parent.verticalCenter
+                    clip: true
+
+                    property string spacing: " " 
+                    property int aStep: 0
+                    property int mStep: 0
+                    property string mTitle: Mpris.mediaTitle
+                    property string mCombined: mTitle + spacing
+                    property string mDisplay: mCombined.substring(mStep) + mCombined.substring(0, mStep)
+                    property string aArtist: Mpris.artist
+                    property string aCombined: aArtist + spacing
+                    property string aDisplay: aCombined.substring(aStep) + aCombined.substring(0, aStep)
+
+                    Timer {
+                        id: timer
+                        interval: 200
+                        running: false
+                        repeat: true
+                        onTriggered: {
+                            parent.aStep = (parent.aStep + 1) % parent.aCombined.length
+                        } 
+                    }
+
+                    Timer {
+                        id: timerS
+                        interval: 200
+                        running: false
+                        repeat: true
+                        onTriggered: {
+                            parent.mStep = (parent.mStep + 1) % parent.mCombined.length
+                        } 
+                    }
+
+                    Timer {
+                        id: textCheck
+                        interval: 200
+                        running: false
+                        onTriggered: {
+                            if(artistText.width > parent.width + 12) {
+                                timer.running = true
+                            }
+
+                            else {
+                                parent.aStep = 0
+                                timer.running = false
+                            }
+
+                            if(titleText.width > parent.width + 12) {
+                                timerS.running = true
+                            }
+
+                            else {
+                                parent.mStep = 0
+                                timerS.running = false
+                            }
+                        } 
+                    }
+
+                    ColumnLayout {
+
+                        Text {
+                            id: artistText
+                            font.pixelSize: 28
+                            font.weight: 700
+                            font.family: Main.fontSource
+                            color: "white"
+                            text: middleText.aDisplay
+
+                            onWidthChanged: {
+                                textCheck.running = true
+                            }
+                        }
+
+                        Text {
+                            id: titleText
+                            font.pixelSize: 20
+                            font.weight: 650
+                            font.family: Main.fontSource
+                            color: "white"
+                            text: middleText.mDisplay
+
+                            onWidthChanged: {
+                                textCheck.running = true
+                            }
+                        }
                     }
                 }
             }

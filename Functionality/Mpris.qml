@@ -10,6 +10,8 @@ Singleton {
     property string mediaTitle
     property string albumImage
     property string status
+    property string timeStatus
+    property string artist
     property bool playing
 
     Process {
@@ -52,6 +54,31 @@ Singleton {
                     root.status = "../../icons/play.svg"
                     root.playing = false
                 }
+            }
+        }
+    }
+
+    Process {
+        id: playbackTime
+        running: true
+        command: ["sh", "-c", "playerctl metadata --format '{{ duration(position) }} {{ duration(mpris:length) }}' --follow"]
+
+        stdout: SplitParser {
+            onRead: data => {
+                var lines = data.split(" ")
+                root.timeStatus = "(" + lines[0] + " / " + lines[1] + ")" 
+            }
+        }
+    }
+
+    Process {
+        id: author
+        running: true
+        command: ["playerctl", "metadata", "--format", "{{ artist }}", "--follow"]
+
+        stdout: SplitParser {
+            onRead: data => {
+                root.artist = data
             }
         }
     }

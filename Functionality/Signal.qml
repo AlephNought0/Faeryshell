@@ -3,7 +3,6 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import QtQuick
-import "../js/internet.js" as Icon
 
 Singleton {
     id: root
@@ -102,7 +101,27 @@ Singleton {
             wifiState.running = true;
             wifiSignal.running = true;
             
-            root.icon = Icon.icon(root.wifiCon, root.ethernetCon, root.strength)
+            if(ethernetCon && !wifiCon) {
+                root.icon = "../icons/ethernet.svg";
+            }
+
+            else if((!ethernetCon && wifiCon) || (wifiCon && ethernetCon)) {
+                if(root.strength < 55) {
+                    root.icon = "../icons/wifi_epic";
+                }
+
+                else if(root.strength < 70) {
+                    root.icon = "../icons/wifi_medium";
+                }
+
+                else {
+                    root.icon = "../icons/wifi_low";
+                }
+            }
+
+            else {
+                root.icon = "../icons/no_access.svg";
+            }
         }
     }
 }

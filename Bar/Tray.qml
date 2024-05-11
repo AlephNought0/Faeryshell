@@ -2,6 +2,8 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 
+import ".."
+
 Rectangle {
     width: 180
     height: 30
@@ -27,7 +29,8 @@ Rectangle {
         anchors.centerIn: parent
         text: "Tray"
         color: "white"
-        font.pixelSize: 16
-        font.weight: 550
+        font.pixelSize: 14
+        font.weight: 650
+        font.family: Main.fontSource
     }
 }

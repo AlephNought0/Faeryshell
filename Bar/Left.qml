@@ -2,6 +2,7 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 import "../Functionality"
+import ".."
 
 
 RowLayout {
@@ -59,8 +60,9 @@ RowLayout {
                 Text {
                     text: Sysinfo.used
                     color: "white"
-                    font.pixelSize: 16  
-                    font.weight: 550
+                    font.pixelSize: 14
+                    font.weight: 650
+                    font.family: Main.fontSource
                 }
             }
 
@@ -85,8 +87,9 @@ RowLayout {
                 Text {
                     text: Sysinfo.cpuUsage
                     color: "white"
-                    font.pixelSize: 16  
-                    font.weight: 550
+                    font.pixelSize: 14
+                    font.weight: 650
+                    font.family: Main.fontSource
                 }
             }
         }

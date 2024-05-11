@@ -7,6 +7,8 @@ import QtQuick
 Singleton {
     property string icon
     property string temp
+    property string fWeather
+    property string fTemperature
     property string formattedHours: "12:00"
     property string formattedDate
 
@@ -69,7 +71,7 @@ Singleton {
             temperature.running = true
 
             var now = new Date();
-            var day = now.getDay(); // Get day of the week (0-6)
+            var day = now.getDay();
             var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             var month = now.getMonth(); // Get month (0-11)
             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

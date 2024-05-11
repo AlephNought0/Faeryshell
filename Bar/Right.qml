@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtCore
 import "../Functionality"
+import ".."
 
 RowLayout {
     id: layout
@@ -39,21 +40,22 @@ RowLayout {
             anchors.centerIn: parent
             text: "Audio"
             color: "white"
+            font.weight: 650
             font.pixelSize: 16  
-            font.weight: 550
+            font.family: Main.fontSource
         }
     }
 
 
     Rectangle { //System
         id: sys
-        width: 125
+        width: 130
         height: parent.height - 5
         anchors.right: parent.right
         radius: 10
         color: "purple"
 
-        readonly property int originalWidth: 125
+        readonly property int originalWidth: 130
 
         MouseArea {
             anchors.centerIn: parent
@@ -78,7 +80,7 @@ RowLayout {
             id: systemContent
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
-            width: parent.width - 20
+            width: parent.width - 25
             spacing: 10
             clip: true
 
@@ -137,16 +139,18 @@ RowLayout {
                 id: hours
                 text: Singl.formattedHours
                 color: "white"
-                font.pixelSize: 16  
-                font.weight: 550
+                font.pixelSize: 15
+                font.weight: 650
+                font.family: Main.fontSource
             }
 
             Text {
                 id: hiddenText
                 text: Singl.formattedDate
                 color: "white"
-                font.pixelSize: 16  
-                font.weight: 550
+                font.pixelSize: 15
+                font.weight: 650
+                font.family: Main.fontSource
             }
 
             NumberAnimation {
