@@ -15,6 +15,18 @@ Singleton {
     property bool playing
 
     Process {
+        id: author
+        running: true
+        command: ["playerctl", "metadata", "--format", "{{ artist }}", "--follow"]
+
+        stdout: SplitParser {
+            onRead: data => {
+                root.artist = data
+            }
+        }
+    }
+
+    Process {
         id: title
         running: true
         command: ["playerctl", "metadata", "--format", "{{ title }}", "--follow"]
@@ -67,18 +79,6 @@ Singleton {
             onRead: data => {
                 var lines = data.split(" ")
                 root.timeStatus = "(" + lines[0] + " / " + lines[1] + ")" 
-            }
-        }
-    }
-
-    Process {
-        id: author
-        running: true
-        command: ["playerctl", "metadata", "--format", "{{ artist }}", "--follow"]
-
-        stdout: SplitParser {
-            onRead: data => {
-                root.artist = data
             }
         }
     }

@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import Quickshell.Wayland
 import "Bar"
 import "Bar/Media"
+import "Bar/Audio"
 import "Functionality"
 
 ShellRoot {
@@ -17,6 +18,8 @@ ShellRoot {
             PanelWindow {
                 id: panel
 
+                mask: Region { item: rect }
+
                 anchors {
                     top: true
                     left: true
@@ -26,20 +29,35 @@ ShellRoot {
                 property var modelData
                 screen: modelData
 
-                height: 35
+                height: screen.height
+                width: screen.width
+                exclusiveZone: Main.barHeight
                 color: "transparent"
 
-                Left{}
+                Item {
+                    id: rect
+                    width: screen.width
+                    height: Main.barHeight
 
-                Media{}
+                    Left{}
 
-                Right{}
+                    Media{}
 
-                LazyLoader {
-                    id: mediaPopup
-                    loading: true
+                    Right{}
 
-                    Interface{}
+                    LazyLoader {
+                        id: mediaPopup
+                        loading: true
+
+                        Interface{}
+                    }
+
+                    LazyLoader {
+                        id: audioPopup
+                        loading: true
+
+                        Audio{}
+                    }
                 }
             }
         }

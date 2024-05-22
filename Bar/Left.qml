@@ -6,15 +6,45 @@ import ".."
 
 
 RowLayout {
-    height: 35
-    anchors.left: parent.left
+    height: 30
+    anchors.bottom: parent.bottom
+    x: 10
     spacing: 10
 
-    Tray{}
+    Rectangle {
+        width: 180
+        height: 30
+        radius: 10
+        color: "purple"
+
+        MouseArea {
+            anchors.centerIn: parent
+            width: parent.width
+            height: parent.height
+            hoverEnabled: true
+
+            onEntered: {
+                parent.color = "grey"
+            }
+
+            onExited: {
+                parent.color = "purple"
+            }
+        }
+
+        Text {
+            anchors.centerIn: parent
+            text: "Tray"
+            color: "white"
+            font.pixelSize: 14
+            font.weight: 650
+            font.family: Main.fontSource
+        }
+    }
 
     Rectangle { // Usage
         width: 160
-        height: parent.height - 5
+        height: parent.height
         radius: 10
         color: "purple"
 

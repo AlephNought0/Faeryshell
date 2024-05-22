@@ -13,10 +13,12 @@ PopupWindow {
     id: mediaParent
     parentWindow: panel
     relativeX: parentWindow.width / 2 - width / 2
-    relativeY: parentWindow.height + 15
+    relativeY: Main.barHeight + 15
     width: 500
     height: 220
     color: "transparent"
+
+    mask: Region { item: mediaInterface; }
 
     property bool targetVisible: false
 
@@ -36,7 +38,7 @@ PopupWindow {
         id: showMedia
         target: mediaInterface
         property: "y"
-        from: panel.height - 200
+        from: -200
         to: 0
         duration: 400
         easing.type: Easing.OutBack
@@ -244,14 +246,14 @@ PopupWindow {
 
                 Rectangle {
                     width: parent.width - 50
-                    height: childrenRect.height + 25
+                    height: 40
                     Layout.alignment: Qt.AlignTop
                     color: "transparent"
 
                     Image {
                         id: currMedia
-                        sourceSize.width: 15
-                        sourceSize.height: 15
+                        sourceSize.width: parent.height - 25
+                        sourceSize.height: parent.height - 25
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         source: "../../icons/chromium.svg"
@@ -321,6 +323,7 @@ PopupWindow {
                         interval: 200
                         running: false
                         onTriggered: {
+                            
                             if(artistText.width > parent.width + 12) {
                                 timer.running = true
                             }

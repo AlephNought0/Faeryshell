@@ -7,21 +7,23 @@ import ".."
 
 RowLayout {
     id: layout
-    height: 35
+    height: 30
     spacing: 10
     anchors.right: parent.right
+    anchors.bottom: parent.bottom
 
     readonly property int layoutSpacing: layout.spacing
 
     Rectangle { //Audio
         id: audio
         width: 110
-        height: parent.height - 5
+        height: parent.height
         radius: 10
         anchors.left: parent.left
         color: "purple"
 
         MouseArea {
+            id: mouseArea
             anchors.centerIn: parent
             width: parent.width
             height: parent.height
@@ -34,15 +36,58 @@ RowLayout {
             onExited: {
                 parent.color = "purple"
             }
+
+            onClicked: {
+                if(audioPopup.item.targetVisible == false) {
+                    audioPopup.item.targetVisible = true
+                }
+
+                else {
+                    audioPopup.item.targetVisible = false
+                }
+            }
         }
 
-        Text {
+        Connections { 
+            target: mouseArea
+
+            function onWheel(wheel) {
+               if (wheel.angleDelta.y > 0) {
+                    AudioControl.volumeUp();
+                } 
+                
+                else {
+                    AudioControl.volumeDown();
+                }
+            }
+        }
+
+        RowLayout {
+            height: parent.height
+            width: parent.width - 50
             anchors.centerIn: parent
-            text: "Audio"
-            color: "white"
-            font.weight: 650
-            font.pixelSize: 16  
-            font.family: Main.fontSource
+            spacing: 5
+
+            Rectangle {
+                height: parent.height
+                width: childrenRect.width
+                color: "transparent"
+
+                Image {
+                    anchors.verticalCenter: parent.verticalCenter
+                    sourceSize.height: parent.height - 10
+                    fillMode: Image.PreserveAspectFit
+                    source: "../icons/audio_full.svg"
+                }
+            }
+
+            Text {
+                font.pixelSize: 14
+                font.weight: 650
+                font.family: Main.fontSource
+                color: "white"
+                text: AudioControl.volume
+            }
         }
     }
 
@@ -50,7 +95,7 @@ RowLayout {
     Rectangle { //System
         id: sys
         width: 130
-        height: parent.height - 5
+        height: parent.height
         anchors.right: parent.right
         radius: 10
         color: "purple"

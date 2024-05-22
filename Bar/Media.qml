@@ -5,7 +5,8 @@ import "../Functionality"
 import ".."
 
 Rectangle {
-    anchors.centerIn: parent
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
     width: 300
     height: 30
     radius: 10
