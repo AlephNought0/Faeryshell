@@ -59,6 +59,7 @@ PopupWindow {
         height: 200
         radius: 10
         color: "purple"
+        layer.enabled: true
 
         onOpacityChanged: {
             if(opacity == 0) {
@@ -193,7 +194,7 @@ PopupWindow {
                         width: parent.width - 10
                         height: parent.height - 10
                         anchors.centerIn: parent
-                        source: Mpris.status
+                        source: Mpris.mediaStatus
                     }
                 }
 
@@ -271,7 +272,7 @@ PopupWindow {
                     }
 
                     Text {
-                        text: Mpris.timeStatus
+                        text: Mpris.mediaPosition + " / " + Mpris.mediaLength
                         anchors.verticalCenter: parent.verticalCenter
                         x: currMedia.width + mediaIcon.width + 10
                         font.pixelSize: 14

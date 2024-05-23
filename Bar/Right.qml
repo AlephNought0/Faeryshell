@@ -152,7 +152,7 @@ RowLayout {
 
                 Connections {
                     target: Battery
-                    onCapacityChanged: battery.repaintCanvas()
+                    onCapacityChanged: { battery.repaintCanvas(); }
                 }
 
                 Image {

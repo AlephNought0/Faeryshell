@@ -4,122 +4,68 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import QtQuick.Controls
+import Quickshell.Services.Mpris
 
 Singleton {
-    id: root
     property string mediaTitle
-    property string albumImage
-    property string status
-    property string timeStatus
     property string artist
+    property string albumImage
+    property string mediaLength
+    property string mediaPosition
+    property string mediaStatus
     property bool playing
+    property int currentPlayer
+    property var allPlayers: []
+    
 
-    Process {
-        id: author
+    Timer {
+        interval: 150
         running: true
-        command: ["playerctl", "metadata", "--format", "{{ artist }}", "--follow"]
+        repeat: true
 
-        stdout: SplitParser {
-            onRead: data => {
-                root.artist = data
-            }
-        }
-    }
+        onTriggered: {
+            let pos = 0;
+            let arr = new Array(0)
 
-    Process {
-        id: title
-        running: true
-        command: ["playerctl", "metadata", "--format", "{{ title }}", "--follow"]
+            for(const player of Mpris.players) {
+                arr.push(MprisPlaybackState.toString(player.playbackState))
 
-        stdout: SplitParser {
-            onRead: data => {
-                root.mediaTitle = data
-            }
-        }
-    }
-
-    Process {
-        id: artUrl
-        running: true
-        command: ["playerctl", "metadata", "--format", "{{ mpris:artUrl }}", "--follow"]
-
-        stdout: SplitParser {
-            onRead: data => {
-                root.albumImage = data
-            }
-        }
-    }
-
-    Process {
-        id: playbackStatus
-        running: true
-        command: ["playerctl", "metadata", "--format", "{{ status }}", "--follow"]
-
-        stdout: SplitParser {
-            onRead: data => {
-                if(data == "Playing") {
-                    root.status = "../../icons/pause.svg"
-                    root.playing = true
+                if(MprisPlaybackState.toString(player.playbackState) !== allPlayers[pos]) {
+                    allPlayers = arr
+                    currentPlayer = pos
                 }
 
-                else {
-                    root.status = "../../icons/play.svg"
-                    root.playing = false
-                }
+                pos++
             }
-        }
-    }
 
-    Process {
-        id: playbackTime
-        running: true
-        command: ["sh", "-c", "playerctl metadata --format '{{ duration(position) }} {{ duration(mpris:length) }}' --follow"]
-
-        stdout: SplitParser {
-            onRead: data => {
-                var lines = data.split(" ")
-                root.timeStatus = "(" + lines[0] + " / " + lines[1] + ")" 
+            if(Mpris.players[currentPlayer].playbackState !== MprisPlaybackState.Playing) {
+                mediaStatus = "../../icons/play.svg"
+                playing = false
             }
+
+            else {
+                mediaStatus = "../../icons/pause.svg"
+                playing = true
+            }
+
+            const mLength = Math.floor((Mpris.players[currentPlayer].length) / 60)
+            const sLength = Math.floor((Mpris.players[currentPlayer].length) % 60)
+            const mPosition = Math.floor((Mpris.players[currentPlayer].position) / 60)
+            const sPosition = Math.floor((Mpris.players[currentPlayer].position) % 60)
+
+            mediaTitle = Mpris.players[currentPlayer].metadata["xesam:title"]
+            artist = Mpris.players[currentPlayer].metadata["xesam:artist"]
+            albumImage = Mpris.players[currentPlayer].metadata["mpris:artUrl"]
+            mediaLength = mLength.toString() + ":" + sLength.toString().padStart(2, '0');
+            mediaPosition = mPosition.toString() + ":" + sPosition.toString().padStart(2, '0');
         }
-    }
-
-    Process {
-        id: next
-        running: false
-        command: ["playerctl", "next"]
-    }
-
-    Process {
-        id: back
-        running: false
-        command: ["playerctl", "previous"]
-    }
-
-    Process {
-        id: play
-        running: false
-        command: ["playerctl", "play"]
-    }
-
-    Process {
-        id: pause
-        running: false
-        command: ["playerctl", "pause"]
-    }
-
-    function nextClick() {
-        next.running = true
-    }
-
-    function backClick() {
-        back.running = true
     }
 
     function playClick() {
-        play.running = true
+        Mpris.players[currentPlayer].playbackState = MprisPlaybackState.Playing
     }
 
     function pauseClick() {
-        pause.running = true
+        Mpris.players[currentPlayer].playbackState = MprisPlaybackState.Paused
     }
-} 
+}
