@@ -10,6 +10,10 @@ Singleton {
     property string level: ""
     property double output
 
+    onOutputChanged: {
+        current_audio.running = true
+    }
+
     Process {
         id: current_audio
         running: true
@@ -45,16 +49,6 @@ Singleton {
         id: set_audio
         running: false
         command: ["wpctl", "set-volume", "@DEFAULT_SINK@", output]
-    }
-
-    Timer { //Change that once native function comes
-        interval: 50
-        running: true
-        repeat: true
-
-        onTriggered: {
-            current_audio.running = true
-        }
     }
 
     function volumeUp() {

@@ -1,15 +1,13 @@
 pragma Singleton
 
 import Quickshell
-import Quickshell.Io
 import QtQuick
-import QtQuick.Controls
 import Quickshell.Services.Mpris
 
 Singleton {
-    property string mediaTitle
-    property string artist
-    property string albumImage
+    property string mediaTitle: Mpris.players[currentPlayer].metadata["xesam:title"]
+    property string artist: Mpris.players[currentPlayer].metadata["xesam:artist"]
+    property string albumImage: Mpris.players[currentPlayer].metadata["mpris:artUrl"]
     property string mediaLength
     property string mediaPosition
     property string mediaStatus
@@ -19,7 +17,7 @@ Singleton {
     
 
     Timer {
-        interval: 150
+        interval: 500
         running: true
         repeat: true
 
@@ -37,7 +35,12 @@ Singleton {
 
                 pos++
             }
+        }
+    }
 
+    FrameAnimation {
+        running: Mpris.players[currentPlayer].playbackStateChanged
+        onTriggered: {
             if(Mpris.players[currentPlayer].playbackState !== MprisPlaybackState.Playing) {
                 mediaStatus = "../../icons/play.svg"
                 playing = false
@@ -47,15 +50,17 @@ Singleton {
                 mediaStatus = "../../icons/pause.svg"
                 playing = true
             }
+        }
+    }
 
+    FrameAnimation {
+        running: Mpris.players[currentPlayer].playbackState == MprisPlaybackState.Playing
+        onTriggered: {
             const mLength = Math.floor((Mpris.players[currentPlayer].length) / 60)
             const sLength = Math.floor((Mpris.players[currentPlayer].length) % 60)
             const mPosition = Math.floor((Mpris.players[currentPlayer].position) / 60)
             const sPosition = Math.floor((Mpris.players[currentPlayer].position) % 60)
 
-            mediaTitle = Mpris.players[currentPlayer].metadata["xesam:title"]
-            artist = Mpris.players[currentPlayer].metadata["xesam:artist"]
-            albumImage = Mpris.players[currentPlayer].metadata["mpris:artUrl"]
             mediaLength = mLength.toString() + ":" + sLength.toString().padStart(2, '0');
             mediaPosition = mPosition.toString() + ":" + sPosition.toString().padStart(2, '0');
         }
