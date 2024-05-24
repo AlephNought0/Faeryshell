@@ -132,35 +132,33 @@ RowLayout {
             readonly property int sySpacing: systemContent.spacing
 
             Canvas {
-                id: battery
+                id: canvas
                 height: parent.height - 3
                 width: 25
 
-                function repaintCanvas() {
-                    requestPaint()
-                }
-
                 onPaint: {
-                    var ctx = getContext("2d");
-        
-                    ctx.beginPath();
-                    ctx.stroke();
+                    var ctx = getContext("2d")
 
-                    ctx.fillStyle = "white";
-                    ctx.fillRect(5.5, 10, Battery.capacity, battery.height - 20);
+                    ctx.fillStyle = "white"
+                    ctx.fillRect(5.5, 10, Battery.capacity, canvas.height - 20)
+
+                    ctx.stroke()
                 }
 
                 Connections {
                     target: Battery
-                    onCapacityChanged: { battery.repaintCanvas(); }
+
+                    function onCapacityChanged() { 
+                        canvas.requestPaint()
+                    }
                 }
 
                 Image {
                     id: skibidi
                     parent: null
                     anchors.verticalCenter: parent.verticalCenter
-                    width: battery.width
-                    height: battery.height
+                    width: canvas.width
+                    height: canvas.height
                     fillMode: Image.PreserveAspectFit
                     source: "../icons/battery.svg"
                 }

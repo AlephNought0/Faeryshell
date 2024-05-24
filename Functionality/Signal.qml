@@ -12,6 +12,7 @@ Singleton {
     property int strength
     property bool wifiCon: false
     property bool ethernetCon: false
+    property var connectivity: [wifiCon, ethernetCon]
 
     Process {
         id: interfaces

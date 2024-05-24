@@ -5,43 +5,59 @@ import QtQuick
 import Quickshell.Services.Mpris
 
 Singleton {
-    property string mediaTitle: Mpris.players[currentPlayer].metadata["xesam:title"]
-    property string artist: Mpris.players[currentPlayer].metadata["xesam:artist"]
-    property string albumImage: Mpris.players[currentPlayer].metadata["mpris:artUrl"]
+    id: root
+
+    property string mediaTitle: trackedPlayer?.metadata["xesam:title"] ?? ""
+    property string artist: trackedPlayer?.metadata["xesam:artist"] ?? ""
+    property string albumImage: trackedPlayer?.metadata["mpris:artUrl"] ?? ""
     property string mediaLength
     property string mediaPosition
-    property string mediaStatus
-    property bool playing
-    property int currentPlayer
-    property var allPlayers: []
+    property string mediaStatus: "../../icons/pause.svg"
+    property bool playing: false
+    property MprisPlayer trackedPlayer: null
     
 
-    Timer {
-        interval: 500
-        running: true
-        repeat: true
+    Connections {
+        target: Mpris.players
 
-        onTriggered: {
-            let pos = 0;
-            let arr = new Array(0)
+        function onObjectInsertedPost(player: MprisPlayer) {
 
-            for(const player of Mpris.players) {
-                arr.push(MprisPlaybackState.toString(player.playbackState))
+            if(player.playbackState === MprisPlaybackState.Playing) {
+                playing = true
+                
+                if(root.trackedPlayer != player) {
+                    root.trackedPlayer = player
+                } 
+            }
 
-                if(MprisPlaybackState.toString(player.playbackState) !== allPlayers[pos]) {
-                    allPlayers = arr
-                    currentPlayer = pos
+            player.playbackStateChanged.connect(() => {
+
+                if(root.trackedPlayer != player) {
+                  root.trackedPlayer = player
                 }
+            })
+        }
 
-                pos++
+        function onObjectRemovedPre() {
+
+            if (root.trackedPlayer == null) {
+
+                for (const player of Mpris.players.values) {
+
+                    if (player != null) {
+                        root.trackedPlayer = player
+                        break
+                    }
+                }
             }
         }
     }
 
-    FrameAnimation {
-        running: Mpris.players[currentPlayer].playbackStateChanged
-        onTriggered: {
-            if(Mpris.players[currentPlayer].playbackState !== MprisPlaybackState.Playing) {
+    Connections {
+        target: root.trackedPlayer
+        
+        function onPlaybackStateChanged() {
+            if(root.trackedPlayer.playbackState !== MprisPlaybackState.Playing) {
                 mediaStatus = "../../icons/play.svg"
                 playing = false
             }
@@ -54,23 +70,34 @@ Singleton {
     }
 
     FrameAnimation {
-        running: Mpris.players[currentPlayer].playbackState == MprisPlaybackState.Playing
+        running: root.trackedPlayer.playbackState == MprisPlaybackState.Playing
+
         onTriggered: {
-            const mLength = Math.floor((Mpris.players[currentPlayer].length) / 60)
-            const sLength = Math.floor((Mpris.players[currentPlayer].length) % 60)
-            const mPosition = Math.floor((Mpris.players[currentPlayer].position) / 60)
-            const sPosition = Math.floor((Mpris.players[currentPlayer].position) % 60)
+            const mLength = Math.floor((root.trackedPlayer.length) / 60)
+            const sLength = Math.floor((root.trackedPlayer.length) % 60)
+            const mPosition = Math.floor((root.trackedPlayer.position) / 60)
+            const sPosition = Math.floor((root.trackedPlayer.position) % 60)
 
             mediaLength = mLength.toString() + ":" + sLength.toString().padStart(2, '0');
             mediaPosition = mPosition.toString() + ":" + sPosition.toString().padStart(2, '0');
+
+            root.trackedPlayer.positionChanged()
         }
     }
 
     function playClick() {
-        Mpris.players[currentPlayer].playbackState = MprisPlaybackState.Playing
+        root.trackedPlayer.playbackState = MprisPlaybackState.Playing
     }
 
     function pauseClick() {
-        Mpris.players[currentPlayer].playbackState = MprisPlaybackState.Paused
+        root.trackedPlayer.playbackState = MprisPlaybackState.Paused
+    }
+
+    function nextClick() {
+        root.trackedPlayer.next()
+    }
+
+    function backClick() {
+        root.trackedPlayer.previous()
     }
 }

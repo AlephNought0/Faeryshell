@@ -6,13 +6,10 @@ import QtQuick
 
 Singleton {
     id: root
-    property string volume: ""
-    property string level: ""
+    property string volume
+    property string level
     property double output
-
-    onOutputChanged: {
-        current_audio.running = true
-    }
+    property double prev
 
     Process {
         id: current_audio
@@ -52,22 +49,33 @@ Singleton {
     }
 
     function volumeUp() {
-        output += 0.01; 
-        
-        if (output >= 1) {
+        output += 0.01
+
+        if(output > 1) {
             output = 1
         }
-        
-        set_audio.running = true;
+
+        if(prev !== output) {
+            set_audio.running = true
+            current_audio.running = true
+        }
+
+        prev = output
     }
 
     function volumeDown() {
-        output -= 0.01; 
-        
-        if (output <= 0) {
+        output -= 0.01
+
+        if(output < 0) {
             output = 0
         }
         
-        set_audio.running = true;
+        if(prev !== output) {
+
+            set_audio.running = true
+            current_audio.running = true
+        }
+
+        prev = output
     }
 }
