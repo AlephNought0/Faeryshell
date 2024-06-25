@@ -6,10 +6,10 @@ import QtQuick
 
 Singleton {
     id: root
-    property string volume
-    property string level
-    property double output
-    property double prev
+    property string volume: Math.round(output * 100) + "%"
+    property string level: ""
+    property double output: 0
+    property double prev: 0
 
     Process {
         id: current_audio
@@ -21,7 +21,6 @@ Singleton {
             onRead: data => {
                 var meow = data.replace(/[^0-9.]/g, "")
                 output = Number(meow)
-                volume = Math.round(meow * 100) + "%"
 
                 if(output > 0.6) {
                     level = "../icons/audio_full.svg"
@@ -49,32 +48,31 @@ Singleton {
     }
 
     function volumeUp() {
-        output += 0.01
-
-        if(output > 1) {
-            output = 1
+        if(output < 1) {
+            output += 0.01
         }
 
         if(prev !== output) {
             set_audio.running = true
             current_audio.running = true
         }
+
+        volume = Math.round(output * 100) + "%"
 
         prev = output
     }
 
     function volumeDown() {
-        output -= 0.01
-
-        if(output < 0) {
-            output = 0
-        }
+        if(output > 0) {
+            output -= 0.01
+        }  
         
         if(prev !== output) {
-
             set_audio.running = true
             current_audio.running = true
         }
+
+        volume = Math.round(output * 100) + "%"
 
         prev = output
     }
