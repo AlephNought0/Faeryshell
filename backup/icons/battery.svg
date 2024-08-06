@@ -1,0 +1,14 @@
+<svg viewBox="0 0 48 48" id="a" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" style="--darkreader-inline-fill: #181a1b;" data-darkreader-inline-fill="">
+  <g transform="rotate(90 24 24)">
+    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.576" style="--darkreader-inline-stroke: #ffffff;" data-darkreader-inline-stroke=""></g>
+    <g id="SVGRepo_iconCarrier">
+      <defs>
+        <style>.b{fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:3}</style>
+        <style class="darkreader darkreader--sync" media="screen"></style>
+      </defs>
+      <path class="b" d="M21.8,4.5h4.1c.7,0,1.1,.4,1.1,1.1v1.9h6.8c1.2,0,2.2,1,2.2,2.2v30.6c0,1.2-1,2.2-2.2,2.2H14.2c-1.2,0-2.2-1-2.2-2.2V9.7c0-1.2,1-2.2,2.2-2.2h6.4v-1.9c.1-.7,.6-1.1,1.2-1.1Z"></path>
+      <line class="b" x1="19" y1="7.5" x2="28.7" y2="7.5"></line>
+    </g>
+  </g>
+</svg>

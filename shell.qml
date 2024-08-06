@@ -1,13 +1,11 @@
 import Quickshell
-import Quickshell.Io
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
 import Quickshell.Wayland
-import "Bar"
-import "Bar/Media"
-import "Bar/Audio"
-import "Functionality"
+import QtQuick
+
+import "./bar/left"
+import "./bar/mid"
+import "./bar/right"
+
 
 ShellRoot {
     Variants {
@@ -31,32 +29,42 @@ ShellRoot {
 
                 height: screen.height
                 width: screen.width
-                exclusiveZone: Main.barHeight
+                exclusiveZone: 40
                 color: "transparent"
 
                 Item {
                     id: rect
                     width: screen.width
-                    height: Main.barHeight
+                    height: panel.exclusiveZone
 
-                    Left{}
+                    Lbar {
+                        anchors {
+                            bottom: parent.bottom
+                            left: parent.left
+                            leftMargin: 10
+                        }
+                    }
 
-                    Media{}
+                    Mbar {
+                        anchors {
+                            bottom: parent.bottom
+                            horizontalCenter: parent.horizontalCenter
+                        }
+                    }
 
-                    Right{}
+                    Rbar {
+                        anchors {
+                            bottom: parent.bottom
+                            right: parent.right
+                            rightMargin: 10
+                        }
+                    }
 
                     LazyLoader {
                         id: mediaPopup
                         loading: true
 
-                        Interface{}
-                    }
-
-                    LazyLoader {
-                        id: audioPopup
-                        loading: true
-
-                        Audio{}
+                        MediaInterface{}
                     }
                 }
             }
