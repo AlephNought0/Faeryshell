@@ -218,6 +218,7 @@ PopupWindow {
             }
 
             ColumnLayout {
+                id: mediaInfo
                 height: parent.height
                 width: mediaInterface.width - mediaImage.width - controls.width - parent.anchors.leftMargin
                 anchors.right: parent.right
@@ -273,7 +274,7 @@ PopupWindow {
                         }
 
                         onWidthChanged: {
-                            if(width > parent.width) {
+                            if(width > mediaInfo.width) {
                                 movingArtist.running = true
                             }
 
@@ -319,7 +320,7 @@ PopupWindow {
                         }
 
                         onWidthChanged: {
-                            if(width > parent.width) {
+                            if(width > mediaInfo.width) {
                                 movingTitle.running = true
                             }
 
