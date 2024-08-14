@@ -166,13 +166,13 @@ RowLayout {
                 source: "../../icons/battery.svg"
 
                 Rectangle {
-                    width: parent.width - 15 //Not so nice but it works I guess
+                    width: parent.width - 14.3 //Not so nice but it works I guess
                     height: parent.height - 22
                     color: "white"
 
                     anchors {
                         left: parent.left
-                        leftMargin: 7
+                        leftMargin: 6.5
                         verticalCenter: parent.verticalCenter
                     }
                 }

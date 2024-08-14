@@ -24,19 +24,16 @@ RowLayout {
                 model: SystemTray.items
 
                 Item {
+                    id: iconMenu
                     Layout.fillHeight: true
-                    implicitWidth: 30
+                    implicitWidth: 25
+
+                    property bool isOpen: false
 
                     QsMenuOpener {
                         id: trayMenu
                         menu: modelData.menu
                     }
-
-                    SystemTrayMenuWatcher {
-						id: menuWatcher;
-						trayItem: modelData;
-                    }
-                    
 
                     Image {
                         source: modelData.icon
@@ -48,16 +45,29 @@ RowLayout {
 						}                        
                     }
 
+                    MenuList {
+                        id: itemMenu
+                        items: trayMenu == null ? [] : trayMenu.children
+                        y: panel.exclusiveZone
+                        visible: isOpen 
+                    }
+
                     MouseArea {
                         anchors.fill: parent
+                        hoverEnabled: true
+
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
                         onClicked: event => {
                             if(event.button === Qt.LeftButton) {
                                 modelData.activate()
+                                console.log("eh")
                             }
 
                             else if(event.button === Qt.RightButton) {
-                                //trayMenu.close()
+                                iconMenu.isOpen = !iconMenu.isOpen
+
+                                console.log("meow")
                             }
                         }
                     }
@@ -68,7 +78,6 @@ RowLayout {
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
-            propagateComposedEvents: true
 
             onEntered: {
                 parent.color = "grey"

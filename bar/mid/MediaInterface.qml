@@ -10,7 +10,7 @@ PopupWindow {
     anchor.rect.x: panel.width / 2 - width / 2
     anchor.rect.y: panel.exclusiveZone + 15
     anchor.window: panel
-    width: 700
+    width: 900
     height: 350
     color: "transparent"
 
@@ -94,8 +94,9 @@ PopupWindow {
             }
 
             ColumnLayout {
+                id: test
                 height: parent.height
-                width: parent.width / 2 - parent.anchors.leftMargin
+                width: parent.width + parent.anchors.leftMargin
                 anchors.right: parent.right
                 spacing: -50
 
