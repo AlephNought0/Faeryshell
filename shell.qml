@@ -15,9 +15,12 @@ ShellRoot {
             
             PanelWindow {
                 id: panel
-
-                mask: Region { item: rect }
-
+                height: screen.height
+                width: screen.width
+                exclusiveZone: 40
+                screen: modelData
+                focusable: true
+                color: "transparent"
                 anchors {
                     top: true
                     left: true
@@ -25,12 +28,8 @@ ShellRoot {
                 }
 
                 property var modelData
-                screen: modelData
 
-                height: screen.height
-                width: screen.width
-                exclusiveZone: 40
-                color: "transparent"
+                mask: Region { item: rect }
 
                 Item {
                     id: rect
@@ -38,6 +37,7 @@ ShellRoot {
                     height: panel.exclusiveZone
 
                     Lbar {
+                        id: meow
                         anchors {
                             bottom: parent.bottom
                             left: parent.left
@@ -67,6 +67,25 @@ ShellRoot {
                         MediaInterface{}
                     }
                 }
+
+                /*Item {
+                    height: screen.height - panel.exclusiveZone
+                    width: screen.height
+                    anchors {
+                        top: rect.bottom
+                        left: panel.left
+                        right: panel.right
+                        bottom: panel.bottom
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+
+                        onClicked: {
+                            console.log("meow")
+                        }
+                    }
+                }*/
             }
         }
     }

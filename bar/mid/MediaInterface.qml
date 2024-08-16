@@ -29,6 +29,10 @@ PopupWindow {
         }
     }
 
+    function closeMpris() {
+        mediaInterface.opacity = 0
+    }
+
     Rectangle {
         id: mediaInterface
         width: parent.width
@@ -349,8 +353,8 @@ PopupWindow {
 
         onOpacityChanged: {
             if(opacity == 0) {
-                mediaPopup.active = false;
-                mediaPopup.loading = true;
+                mediaPopup.active = false
+                mediaPopup.loading = true
             }
         }
     }

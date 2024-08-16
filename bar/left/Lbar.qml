@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import Quickshell
 import Quickshell.Services.SystemTray
 
@@ -9,12 +10,15 @@ RowLayout {
     spacing: 10
 
     Rectangle { //Tray icons
+        id: trayIcons
         width: 200
         height: panel.exclusiveZone - 5
         border.color: "black"
         border.width: 1.5
         radius: 10
         color: "purple"
+
+        property var selectedMenu: null
 
         RowLayout {
             anchors.centerIn: parent
@@ -30,6 +34,23 @@ RowLayout {
 
                     property bool isOpen: false
 
+                    onIsOpenChanged: {
+                        if(!isOpen) {
+                            trayMenu.menu = null
+                        }
+                    }
+
+                    Timer {
+                        id: openDelay
+                        interval: 100
+                        running: false
+                        repeat: false
+
+                        onTriggered: {
+                            iconMenu.isOpen = !iconMenu.isOpen
+                        }
+                    }
+
                     QsMenuOpener {
                         id: trayMenu
                         menu: modelData.menu
@@ -42,32 +63,41 @@ RowLayout {
 							left: parent.left
 							right: parent.right
 							verticalCenter: parent.verticalCenter
-						}                        
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                            onClicked: event => {
+                                if(event.button === Qt.LeftButton) {
+                                    modelData.activate()
+                                }
+
+                                else if(event.button === Qt.RightButton) {
+                                    trayMenu.menu = modelData.menu
+                                    trayIcons.selectedMenu = itemMenu
+                                    mediaPopup.item.closeMpris()
+                                    openDelay.running = true
+                                }
+                            }
+                        }
                     }
 
                     MenuList {
                         id: itemMenu
                         items: trayMenu == null ? [] : trayMenu.children
-                        y: panel.exclusiveZone
-                        visible: isOpen 
-                    }
+                        visible: itemMenu == trayIcons.selectedMenu && iconMenu.isOpen && trayMenu.menu !== null
+                        xCor: 10
+                        yCor: panel.exclusiveZone + 5
 
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
+                        Connections {
+                            target: trayIcons
 
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-                        onClicked: event => {
-                            if(event.button === Qt.LeftButton) {
-                                modelData.activate()
-                                console.log("eh")
-                            }
-
-                            else if(event.button === Qt.RightButton) {
-                                iconMenu.isOpen = !iconMenu.isOpen
-
-                                console.log("meow")
+                            function onSelectedMenuChanged() {
+                                if(trayIcons.selectedMenu != itemMenu) {
+                                    iconMenu.isOpen = false
+                                }
                             }
                         }
                     }
@@ -78,6 +108,7 @@ RowLayout {
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
+            propagateComposedEvents: true
 
             onEntered: {
                 parent.color = "grey"
