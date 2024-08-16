@@ -8,9 +8,9 @@ import "../../"
 
 Rectangle {
     id: root
-    width: row.width
+    width: row.width 
     height: row.height
-    radius: 10
+    radius: 5
     color: "transparent"
     anchors.fill: parent
 
@@ -67,67 +67,31 @@ Rectangle {
             implicitWidth: 22
             implicitHeight: 22
 
-            Rectangle {
-                width: 22
-                height: 22
+            Text {
+                text: "󰚈"
                 visible: entry.hasChildren
+                anchors.centerIn: parent
+                color: "white"
+                font.family: Cfg.font
+                font.pixelSize: 26
             }
 
-            Rectangle { //Checkbox
-                width: 18
-                height: 18
-                anchors.centerIn: parent
+            Text {
+                text: entry.checkState === Qt.Checked ? "󰡖" : ""
                 visible: entry.buttonType == QsMenuButtonType.CheckBox
-                radius: 3
-                border.color: "black"
-                border.width: 1.5
-                color: "transparent"
-
-                Rectangle {
-                    radius: 1
-                    visible: entry.checkState === Qt.Checked
-                    color: "white"
-                    anchors {
-                        top: parent.top
-                        bottom: parent.bottom
-                        left: parent.left
-                        right: parent.right
-
-                        topMargin: 3.5
-                        bottomMargin: 3.5
-                        leftMargin: 3.5
-                        rightMargin: 3.5
-                    }
-                }
+                anchors.centerIn: parent
+                color: "white"
+                font.family: Cfg.font
+                font.pixelSize: entry.checkState === Qt.Checked ? 28 : 24 
             }
 
-            Rectangle {
-                width: 18
-                height: 18
-                anchors.centerIn: parent
+            Text {
+                text: entry.checkState === Qt.Checked ? "󰪥" : ""
                 visible: entry.buttonType == QsMenuButtonType.RadioButton
-                radius: 10
-                border.color: "black"
-                border.width: 1.5
-                color: "transparent"
-
-                Rectangle {
-                    radius: 10
-                    visible: entry.checkState == Qt.Checked
-                    color: "white"
-                    anchors {
-                        top: parent.top
-                        bottom: parent.bottom
-                        left: parent.left
-                        right: parent.right
-
-                        topMargin: 2.5
-                        bottomMargin: 2.5
-                        leftMargin: 2.5
-                        rightMargin: 2.5
-                    }
-                    
-                }
+                anchors.centerIn: parent
+                color: "white"
+                font.family: Cfg.font
+                font.pixelSize: entry.checkState === Qt.Checked ? 28 : 22
             }
         }
 

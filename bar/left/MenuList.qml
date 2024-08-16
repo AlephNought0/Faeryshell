@@ -47,7 +47,7 @@ PopupWindow {
 
             ColumnLayout {
                 id: menuColumn
-                spacing: 5
+                spacing: 3
                 anchors.centerIn: parent
 
                 Repeater {
@@ -68,7 +68,7 @@ PopupWindow {
 
                             Component.onCompleted: {
                                 if(root.maxWidth < width) {
-                                    root.maxWidth = width + 20
+                                    root.maxWidth = width
                                 }
 
                                 else {
