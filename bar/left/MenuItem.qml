@@ -60,7 +60,7 @@ Rectangle {
             entry.triggered()
 
             if(entry.buttonType == QsMenuButtonType.None) {
-                iconMenu.isOpen = false
+                itemMenu.targetVisible = false
             }
         }
     }

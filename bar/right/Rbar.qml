@@ -8,7 +8,6 @@ import "../../"
 RowLayout {
     id: root
     spacing: 10
-    anchors.bottom: parent.bottom
 
     property string currDate
 

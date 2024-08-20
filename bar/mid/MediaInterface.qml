@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
@@ -7,6 +8,7 @@ import "../../"
 import "../../functions/"
 
 PopupWindow {
+    id: root
     anchor.rect.x: panel.width / 2 - width / 2
     anchor.rect.y: panel.exclusiveZone + 15
     anchor.window: panel
@@ -20,17 +22,27 @@ PopupWindow {
 
     onTargetVisibleChanged: {
         if(targetVisible) {
-            visible = true;
+            visible = true
+            grab.active = true
             mediaInterface.y = 0
         }
 
         else {
-            mediaInterface.opacity = 0;
+            mediaInterface.opacity = 0
         }
     }
 
     function closeMpris() {
         mediaInterface.opacity = 0
+    }
+
+    HyprlandFocusGrab {
+      id: grab
+      windows: [ root, panel ]
+
+      onCleared: {
+          closeMpris()
+      }
     }
 
     Rectangle {

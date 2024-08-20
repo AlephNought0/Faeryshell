@@ -34,12 +34,6 @@ RowLayout {
 
                     property bool isOpen: false
 
-                    onIsOpenChanged: {
-                        if(!isOpen) {
-                            trayMenu.menu = null
-                        }
-                    }
-
                     Timer {
                         id: openDelay
                         interval: 100
@@ -47,7 +41,7 @@ RowLayout {
                         repeat: false
 
                         onTriggered: {
-                            iconMenu.isOpen = !iconMenu.isOpen
+                            itemMenu.targetVisible = !itemMenu.targetVisible
                         }
                     }
 
@@ -93,14 +87,14 @@ RowLayout {
                     MenuList {
                         id: itemMenu
                         items: trayMenu == null ? [] : trayMenu.children
-                        visible: itemMenu == trayIcons.selectedMenu && iconMenu.isOpen && trayMenu.menu !== null
+                        visible: itemMenu == trayIcons.selectedMenu && itemMenu.targetVisible
 
                         Connections {
                             target: trayIcons
 
                             function onSelectedMenuChanged() {
                                 if(trayIcons.selectedMenu != itemMenu) {
-                                    iconMenu.isOpen = false
+                                    itemMenu.targetVisible = false
                                 }
                             }
                         }

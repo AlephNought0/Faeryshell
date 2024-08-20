@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Hyprland
 
 import "../../"
 
@@ -16,8 +17,30 @@ PopupWindow {
     required property var items
     property real maxWidth: 0
     property bool hovered: false
+    property bool targetVisible: false
 
     mask: Region { item: trayList }
+
+    onTargetVisibleChanged: {
+        if(targetVisible) {
+            trayList.opacity = 1
+            grab.active = true
+        }
+
+        else {
+            trayList.opacity = 0
+        }
+    }
+
+   HyprlandFocusGrab {
+      id: grab
+      windows: [ root, panel ]
+      active: true
+
+      onCleared: {
+          trayList.opacity = 0
+      }
+  }
 
     MouseArea {
         anchors.fill: parent
@@ -31,7 +54,6 @@ PopupWindow {
             hovered = false
         }
     
-
         Rectangle {
             id: trayList
             width: menuColumn.width + 22
@@ -39,8 +61,15 @@ PopupWindow {
             radius: 10
             border.color: "black"
             border.width: 1.5
-            visible: true
+            opacity: 0
             color: "purple"
+
+            onOpacityChanged: {
+                if(trayList.opacity == 0) {
+                    grab.active = false
+                    root.targetVisible = false
+                }
+            }
 
             ColumnLayout {
                 id: menuColumn
@@ -95,6 +124,12 @@ PopupWindow {
                             }
                         }
                     }
+                }
+            }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 100
                 }
             }
         }

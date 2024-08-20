@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Hyprland
 import QtQuick
 
 import "./bar/left"
@@ -15,11 +16,10 @@ ShellRoot {
             
             PanelWindow {
                 id: panel
-                height: screen.height
+                height: 40
                 width: screen.width
                 exclusiveZone: 40
                 screen: modelData
-                focusable: true
                 color: "transparent"
                 anchors {
                     top: true
@@ -29,63 +29,35 @@ ShellRoot {
 
                 property var modelData
 
-                mask: Region { item: rect }
-
-                Item {
-                    id: rect
-                    width: screen.width
-                    height: panel.exclusiveZone
-
-                    Lbar {
-                        id: meow
-                        anchors {
-                            bottom: parent.bottom
-                            left: parent.left
-                            leftMargin: 10
-                        }
-                    }
-
-                    Mbar {
-                        anchors {
-                            bottom: parent.bottom
-                            horizontalCenter: parent.horizontalCenter
-                        }
-                    }
-
-                    Rbar {
-                        anchors {
-                            bottom: parent.bottom
-                            right: parent.right
-                            rightMargin: 10
-                        }
-                    }
-
-                    LazyLoader {
-                        id: mediaPopup
-                        loading: true
-
-                        MediaInterface{}
+                Lbar {
+                    anchors {
+                        bottom: parent.bottom
+                        left: parent.left
+                        leftMargin: 10
                     }
                 }
 
-                /*Item {
-                    height: screen.height - panel.exclusiveZone
-                    width: screen.height
+                Mbar {
                     anchors {
-                        top: rect.bottom
-                        left: panel.left
-                        right: panel.right
-                        bottom: panel.bottom
+                        bottom: parent.bottom
+                        horizontalCenter: parent.horizontalCenter
                     }
+                }
 
-                    MouseArea {
-                        anchors.fill: parent
-
-                        onClicked: {
-                            console.log("meow")
-                        }
+                Rbar {
+                    anchors {
+                        bottom: parent.bottom
+                        right: parent.right
+                        rightMargin: 10
                     }
-                }*/
+                }
+
+                LazyLoader {
+                    id: mediaPopup
+                    loading: true
+
+                    MediaInterface{}
+                }
             }
         }
     }
