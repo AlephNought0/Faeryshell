@@ -35,7 +35,6 @@ PopupWindow {
    HyprlandFocusGrab {
       id: grab
       windows: [ root, panel ]
-      active: true
 
       onCleared: {
           trayList.opacity = 0
