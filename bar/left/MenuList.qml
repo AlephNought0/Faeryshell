@@ -6,15 +6,13 @@ import "../../"
 
 PopupWindow {
     id: root
-    anchor.rect.x: xCor
-    anchor.rect.y: yCor
+    anchor.rect.x: 0
+    anchor.rect.y: 0
     anchor.window: panel
-    width: menuColumn.width + 20
-    height: menuColumn.height + 20
+    width: menuColumn.width + 22
+    height: menuColumn.height + 22
     color: "transparent"
 
-    required property real xCor
-    required property real yCor
     required property var items
     property real maxWidth: 0
     property bool hovered: false
@@ -22,7 +20,6 @@ PopupWindow {
     mask: Region { item: trayList }
 
     MouseArea {
-        id: test
         anchors.fill: parent
         hoverEnabled: true
 
@@ -37,8 +34,8 @@ PopupWindow {
 
         Rectangle {
             id: trayList
-            width: menuColumn.width + 20
-            height: menuColumn.height + 20
+            width: menuColumn.width + 22
+            height: menuColumn.height + 22
             radius: 10
             border.color: "black"
             border.width: 1.5
@@ -54,8 +51,9 @@ PopupWindow {
                     model: items
 
                     Loader {
-                        height: childrenRect.height
+                        height: modelData.isSeparator ? 14 : childrenRect.height
                         width: childrenRect.width
+
                         required property var modelData;
 
                         BoundComponent {
@@ -63,6 +61,7 @@ PopupWindow {
                             source: "MenuItem.qml"
                             width: childrenRect.width
                             height: childrenRect.height
+                            bindValues: false
 
                             property var entry: modelData
 
@@ -89,15 +88,10 @@ PopupWindow {
 
                         Rectangle {
                             visible: modelData.isSeparator
-
                             anchors {
-                                left: parent.left
-                                right: parent.right
-                                top: parent.top
-                                bottom: parent.bottom
-
-                                topMargin: 11
-                                bottomMargin: 11
+                                fill: parent
+                                topMargin: 6
+                                bottomMargin: 6
                             }
                         }
                     }

@@ -8,7 +8,7 @@ import "../../"
 
 Rectangle {
     id: root
-    width: row.width 
+    width: row.width + 22
     height: row.height
     radius: 5
     color: "transparent"
@@ -39,6 +39,14 @@ Rectangle {
             parent.color = "gray"
 
             if(entry.hasChildren) {
+                const window = QsWindow.window
+                const widgetRect = window.contentItem.mapFromItem(tr, trayList.width - 5, trayList.height * 0.55)
+
+                children.anchor.rect = widgetRect
+
+                console.log(widgetRect.x)
+                console.log(root.width)
+
                 root.showChildren = true
             }
         }
@@ -64,6 +72,7 @@ Rectangle {
         id: row
 
         Item {
+            id: buttonItem
             implicitWidth: 22
             implicitHeight: 22
 
@@ -116,8 +125,6 @@ Rectangle {
             id: children
             items: openChildren.children
             visible: showChildren || children.hovered
-            xCor: root.width + 30
-            yCor: trayIcons.height + 5 + (3 * 22)
         }
     }
 }

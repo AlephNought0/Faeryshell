@@ -34,42 +34,50 @@ Rectangle {
         }
     }
 
-    Text {
-        id: title
-        x: (root.width / 2) - (width / 2)
-        anchors.verticalCenter: parent.verticalCenter
-        text: Mpris.mediaTitle
-        font.pixelSize: 16
-        font.family: Cfg.font
-        color: "white"
-
-        NumberAnimation {
-            id: movingText
-            running: false
-            property: "x"
-            target: title
-            from: 0
-            to: -title.width - root.spacing
-            duration: title.width * 9
-            loops: Animation.Infinite
-        }
-        
+    Item {
+        id: titleWrap
+        height: parent.height
+        width: parent.width - 10
+        anchors.centerIn: parent
+        clip: true
 
         Text {
-            x: movingText.running ? title.width + root.spacing : root.width 
-            text: title.text
-            font.pixelSize: parent.font.pixelSize
-            font.family: parent.font.family
-            color: parent.color
-        }
+            id: title
+            x: (titleWrap.width / 2) - (width / 2)
+            anchors.verticalCenter: parent.verticalCenter
+            text: Mpris.mediaTitle
+            font.pixelSize: 16
+            font.family: Cfg.font
+            color: "white"
 
-        onWidthChanged: {
-            if(width > parent.width) {
-                movingText.running = true
+            NumberAnimation {
+                id: movingText
+                running: false
+                property: "x"
+                target: title
+                from: 0
+                to: -title.width - root.spacing
+                duration: title.width * 9
+                loops: Animation.Infinite
+            }
+            
+
+            Text {
+                x: movingText.running ? title.width + root.spacing : title.width 
+                text: title.text
+                font.pixelSize: parent.font.pixelSize
+                font.family: parent.font.family
+                color: parent.color
             }
 
-            else {
-                movingText.running = false
+            onWidthChanged: {
+                if(width > parent.width) {
+                    movingText.running = true
+                }
+
+                else {
+                    movingText.running = false
+                }
             }
         }
     }

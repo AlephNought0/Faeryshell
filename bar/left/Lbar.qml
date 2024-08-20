@@ -57,6 +57,7 @@ RowLayout {
                     }
 
                     Image {
+                        id: tr
                         source: modelData.icon
                         height: width
 						anchors {
@@ -77,7 +78,12 @@ RowLayout {
                                 else if(event.button === Qt.RightButton) {
                                     trayMenu.menu = modelData.menu
                                     trayIcons.selectedMenu = itemMenu
-                                    mediaPopup.item.closeMpris()
+
+                                    const window = QsWindow.window
+                                    const widgetRect = window.contentItem.mapFromItem(tr, -10, tr.height + 10)
+
+                                    itemMenu.anchor.rect = widgetRect
+
                                     openDelay.running = true
                                 }
                             }
@@ -88,8 +94,6 @@ RowLayout {
                         id: itemMenu
                         items: trayMenu == null ? [] : trayMenu.children
                         visible: itemMenu == trayIcons.selectedMenu && iconMenu.isOpen && trayMenu.menu !== null
-                        xCor: 10
-                        yCor: panel.exclusiveZone + 5
 
                         Connections {
                             target: trayIcons
