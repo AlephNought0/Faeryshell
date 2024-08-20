@@ -44,9 +44,6 @@ Rectangle {
 
                 children.anchor.rect = widgetRect
 
-                console.log(widgetRect.x)
-                console.log(root.width)
-
                 root.showChildren = true
             }
         }
