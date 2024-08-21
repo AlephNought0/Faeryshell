@@ -21,26 +21,25 @@ PopupWindow {
 
     mask: Region { item: trayList }
 
+    onHoveredChanged: {
+        if(!targetVisible && !hovered){
+            trayList.opacity = 0
+        }
+        
+    }
+
     onTargetVisibleChanged: {
         if(targetVisible) {
             trayList.opacity = 1
             grab.active = true
-            iconMenu.isOpen = true
+            grab.windows.push(root)
+            row.isOpen = true
         }
 
-        else {
+        else if(!targetVisible && !hovered){
             trayList.opacity = 0
         }
     }
-
-   HyprlandFocusGrab {
-      id: grab
-      windows: [ root, panel ]
-
-      onCleared: {
-          trayList.opacity = 0
-      }
-  }
 
     MouseArea {
         anchors.fill: parent
@@ -61,13 +60,12 @@ PopupWindow {
             radius: 10
             border.color: "black"
             border.width: 1.5
-            opacity: 0.1
+            opacity: 0
             color: "purple"
 
             onOpacityChanged: {
                 if(trayList.opacity == 0) {
-                    grab.active = false
-                    iconMenu.isOpen = false
+                    row.isOpen = false
                 }
             }
 
@@ -129,7 +127,7 @@ PopupWindow {
 
             Behavior on opacity {
                 NumberAnimation {
-                    duration: 200
+                    duration: 100
                 }
             }
         }

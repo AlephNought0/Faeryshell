@@ -24,14 +24,13 @@ Rectangle {
         repeat: false
 
         onTriggered: {
-            showChildren = false
+            children.targetVisible = false
         }
     }
 
     MouseArea {
         anchors.fill: parent
-        hoverEnabled: true
-        propagateComposedEvents: true
+        hoverEnabled: true 
 
         visible: !entry.isSeparator
 
@@ -44,7 +43,7 @@ Rectangle {
 
                 children.anchor.rect = widgetRect
 
-                root.showChildren = true
+                children.targetVisible = true
             }
         }
 
@@ -67,6 +66,7 @@ Rectangle {
 
     RowLayout {
         id: row
+        property bool isOpen: false
 
         Item {
             id: buttonItem
@@ -118,10 +118,10 @@ Rectangle {
             }
         }
 
-        MenuList {
+        Submenu {
             id: children
             items: openChildren.children
-            visible: showChildren || children.hovered
+            visible: children.targetVisible || children.hovered || row.isOpen
         }
     }
 }

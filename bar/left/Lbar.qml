@@ -87,8 +87,7 @@ RowLayout {
                     MenuList {
                         id: itemMenu
                         items: trayMenu == null ? [] : trayMenu.children
-                        visible: itemMenu == trayIcons.selectedMenu && itemMenu.targetVisible
-
+                        visible: itemMenu == trayIcons.selectedMenu && iconMenu.isOpen
                         Connections {
                             target: trayIcons
 
