@@ -11,18 +11,25 @@ RowLayout {
 
     Rectangle { //Tray icons
         id: trayIcons
-        width: 200
-        height: panel.exclusiveZone - 5
-        border.color: "black"
-        border.width: 1.5
+        Layout.minimumWidth: 45
+        Layout.preferredWidth: trayRow.width + 20
+        height: panel.height - 5
         radius: 10
         color: "purple"
+        clip: true
 
         property var selectedMenu: null
 
         RowLayout {
-            anchors.centerIn: parent
+            id: trayRow
             height: 35
+            layoutDirection: Qt.RightToLeft
+
+            anchors {
+                right: parent.right
+                rightMargin: 10
+                verticalCenter: parent.verticalCenter
+            }
 
             Repeater {
                 model: SystemTray.items
@@ -115,13 +122,18 @@ RowLayout {
                 parent.color = "purple"
             }
         }
+
+        Behavior on Layout.preferredWidth {
+            NumberAnimation {
+                duration: 100
+                easing.type: Easing.OutQuad
+            }
+        }
     }
 
     Rectangle { //Usage info
         Layout.preferredWidth: sysInfo.width + 30
-        height: panel.exclusiveZone - 5
-        border.color: "black"
-        border.width: 1.5
+        height: panel.height - 5
         radius: 10
         color: "purple"
 

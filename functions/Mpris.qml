@@ -20,7 +20,6 @@ Singleton {
         target: Mpris.players
 
         function onObjectInsertedPost(player: MprisPlayer) {
-
             if(player.playbackState === MprisPlaybackState.Playing) {
                 playing = true
                 
@@ -30,7 +29,6 @@ Singleton {
             }
 
             player.playbackStateChanged.connect(() => {
-
                 if(root.trackedPlayer != player) {
                   root.trackedPlayer = player
                 }
@@ -38,12 +36,9 @@ Singleton {
         }
 
         function onObjectRemovedPre() {
-
-            if (root.trackedPlayer == null) {
-
-                for (const player of Mpris.players.values) {
-
-                    if (player != null) {
+            if(root.trackedPlayer == null) {
+                for(const player of Mpris.players.values) {
+                    if(player != null) {
                         root.trackedPlayer = player
                         break
                     }

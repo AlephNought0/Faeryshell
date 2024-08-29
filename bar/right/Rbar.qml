@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.Pipewire
+import Quickshell.Services.UPower
 
 import "../../"
 
@@ -40,9 +41,7 @@ RowLayout {
 
     Rectangle { //Audio
         width: 200
-        height: panel.exclusiveZone - 5
-        border.color: "black"
-        border.width: 1.5
+        height: panel.height - 5
         radius: 10
         Layout.alignment: Qt.AlignLeft
         color: "purple"
@@ -50,6 +49,7 @@ RowLayout {
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
+            z: 100
 
             onEntered: {
                 parent.color = "grey"
@@ -57,6 +57,10 @@ RowLayout {
 
             onExited: {
                 parent.color = "purple"
+            }
+
+            onClicked: {
+                audioPopup.item.targetVisible = !audioPopup.item.targetVisible
             }
         }
 
@@ -75,10 +79,20 @@ RowLayout {
                 id: input
 
                 Text {
-                    text: ""
+                    text: Math.floor((Pipewire.defaultAudioSource.audio.volume * 100)) == 0 || 
+                    Pipewire.defaultAudioSource.audio.muted ? "" : ""
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.RightButton
+
+                        onClicked: {
+                            Pipewire.defaultAudioSource.audio.muted = !Pipewire.defaultAudioSource.audio.muted
+                        }
+                    }
                 }
 
                 Text {
@@ -86,7 +100,7 @@ RowLayout {
                     `${Math.floor(Pipewire.defaultAudioSource.audio.volume * 100)}%` : "100%" 
                     font.family: Cfg.font
                     font.pixelSize: 20
-                    color: "white"
+                    color: "white" 
 
                     MouseArea {
                         anchors.fill: parent
@@ -108,10 +122,20 @@ RowLayout {
                 id: output
 
                 Text {
-                    text: ""
+                    text: Math.floor((Pipewire.defaultAudioSink.audio.volume * 100)) == 0 ||
+                    Pipewire.defaultAudioSink.audio.muted ? "" : ""
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.RightButton
+
+                        onClicked: {
+                            Pipewire.defaultAudioSink.audio.muted = !Pipewire.defaultAudioSink.audio.muted
+                        }
+                    }
                 }
 
                 Text {
@@ -140,23 +164,23 @@ RowLayout {
     }
 
     Rectangle {
+        id: sysWidget
         Layout.preferredWidth: isHovered ? battery.width + internet.width + timeDate.width + 10 * 4 : 160
-        height: panel.exclusiveZone - 5
-        border.color: "black"
-        border.width: 1.5
+        height: panel.height - 5
         radius: 10
         Layout.alignment: Qt.AlignRight
         color: "purple"
         clip: true
 
         property bool isHovered: false
+        property UPowerDevice bat: UPower.displayDevice
 
         RowLayout {
+            spacing: 10
             anchors {
                 left: parent.left
                 leftMargin: 10
             }
-            spacing: 10
 
             Image {
                 id: battery
@@ -165,13 +189,13 @@ RowLayout {
                 source: "../../icons/battery.svg"
 
                 Rectangle {
-                    width: parent.width - 14.3 //Not so nice but it works I guess
+                    width: (parent.width - 13.5) * sysWidget.bat.percentage
                     height: parent.height - 22
                     color: "white"
 
                     anchors {
                         left: parent.left
-                        leftMargin: 6.5
+                        leftMargin: 6
                         verticalCenter: parent.verticalCenter
                     }
                 }
@@ -206,6 +230,10 @@ RowLayout {
             onExited: {
                 parent.color = "purple"
                 parent.isHovered = false
+            }
+
+            onClicked: {
+                sysPopup.item.targetVisible = !sysPopup.item.targetVisible
             }
         }
 

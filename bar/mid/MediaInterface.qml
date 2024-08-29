@@ -4,13 +4,14 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
 
+import ".."
 import "../../"
 import "../../functions/"
 
 PopupWindow {
     id: root
-    anchor.rect.x: panel.width / 2 - width / 2
-    anchor.rect.y: panel.exclusiveZone + 15
+    anchor.rect.x: (panel.width / 2 - width / 2)
+    anchor.rect.y: panel.height + 15
     anchor.window: panel
     width: 900
     height: 350
@@ -32,16 +33,12 @@ PopupWindow {
         }
     }
 
-    function closeMpris() {
-        mediaInterface.opacity = 0
-    }
-
     HyprlandFocusGrab {
       id: grab
       windows: [ root, panel ]
 
       onCleared: {
-          closeMpris()
+          mediaInterface.opacity = 0
       }
     }
 
@@ -129,22 +126,19 @@ PopupWindow {
                         font.pixelSize: 32
                         font.family: Cfg.font
                         color: "white"
-                    }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
+                        ClickableIcon {
+                            icon: parent
 
-                        onEntered: {
-                            parent.color = "grey"
+                            onClicked: {
+                                Mpris.backClick()
+                            }
                         }
 
-                        onExited: {
-                            parent.color = "transparent"
-                        }
-
-                        onClicked: {
-                            Mpris.backClick()
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 100
+                            }
                         }
                     }
                 }
@@ -162,27 +156,24 @@ PopupWindow {
                         font.pixelSize: 32
                         font.family: Cfg.font
                         color: "white"
-                    }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
+                        ClickableIcon {
+                            icon: parent
 
-                        onEntered: {
-                            parent.color = "grey"
-                        }
+                            onClicked: {
+                                if(Mpris.playing == false) {
+                                    Mpris.playClick()
+                                }
 
-                        onExited: {
-                            parent.color = "transparent"
-                        }
-
-                        onClicked: {
-                            if(Mpris.playing == false) {
-                                Mpris.playClick()
+                                else {
+                                    Mpris.pauseClick()
+                                }
                             }
+                        }
 
-                            else {
-                                Mpris.pauseClick()
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 100
                             }
                         }
                     }
@@ -201,22 +192,19 @@ PopupWindow {
                         font.pixelSize: 32
                         font.family: Cfg.font
                         color: "white"
-                    }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
+                        ClickableIcon {
+                            icon: parent
 
-                        onEntered: {
-                            parent.color = "grey"
+                            onClicked: {
+                                Mpris.nextClick()
+                            }
                         }
 
-                        onExited: {
-                            parent.color = "transparent"
-                        }
-
-                        onClicked: {
-                            Mpris.nextClick()
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 100
+                            }
                         }
                     }
                 }

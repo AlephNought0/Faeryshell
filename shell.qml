@@ -6,7 +6,7 @@ import QtQuick
 import "./bar/left"
 import "./bar/mid"
 import "./bar/right"
-
+import "./bar/main"
 
 ShellRoot {
     Variants {
@@ -18,7 +18,6 @@ ShellRoot {
                 id: panel
                 height: 40
                 width: screen.width
-                exclusiveZone: 40
                 screen: modelData
                 color: "transparent"
                 anchors {
@@ -57,6 +56,20 @@ ShellRoot {
                     loading: true
 
                     MediaInterface{}
+                }
+
+                LazyLoader {
+                    id: audioPopup
+                    loading: true
+
+                    AudioInterface{}
+                }
+
+                LazyLoader {
+                    id: sysPopup
+                    loading: true
+
+                    SystemInterface{}
                 }
             }
         }

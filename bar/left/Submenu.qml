@@ -58,8 +58,6 @@ PopupWindow {
             width: menuColumn.width + 22
             height: menuColumn.height + 22
             radius: 10
-            border.color: "black"
-            border.width: 1.5
             opacity: 0
             color: "purple"
 

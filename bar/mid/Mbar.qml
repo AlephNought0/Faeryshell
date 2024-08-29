@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 
 import "../../"
-import "../left/Lbar.qml"
 import "../../functions"
 
 Rectangle {
@@ -10,8 +9,6 @@ Rectangle {
     height: parent.height - 5
     width: 350
     radius: 10
-    border.color: "black"
-    border.width: 1.5
     clip: true
     color: "purple"
 
@@ -63,7 +60,7 @@ Rectangle {
             
 
             Text {
-                x: movingText.running ? title.width + root.spacing : title.width 
+                x: movingText.running ? title.width + root.spacing : titleWrap.width 
                 text: title.text
                 font.pixelSize: parent.font.pixelSize
                 font.family: parent.font.family
