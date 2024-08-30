@@ -3,27 +3,68 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import ".."
+import "../.."
+
 Canvas {
-    id: canvas
+    id: root
     width: 100
     height: 100
     Layout.alignment: Qt.AlignHCenter
 
     required property real progress
+    required property string icon
 
     Rectangle {
+        id: button
         width: 74
         height: 74
         radius: 92
         anchors.centerIn: parent
         color: "transparent"
 
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+
+            onEntered: {
+                parent.color = "cyan"
+            }
+
+            onExited: {
+                parent.color = "transparent"
+                timer.running = false
+            }
+
+            onClicked: {
+                parent.color = "transparent"
+                timer.running = true
+            }
+
+            Timer {
+                id: timer
+                interval: 75
+                repeat: false
+                running: false
+
+                onTriggered: {
+                    button.color = "cyan"
+                }
+            }
+        }
+
         Text {
             anchors.centerIn: parent
-            text: "sex"
+            text: root.icon
             font.family: Cfg.font
-            font.pixelSize: 16
+            font.pixelSize: 32
             color: "white"
+        }
+
+        Behavior on color {
+            ColorAnimation {
+                duration: 150
+            }
         }
     }
 
@@ -54,6 +95,6 @@ Canvas {
         ctx.lineWidth = 8;
         ctx.strokeStyle = "white";
         ctx.stroke();
-    }
+    } 
 }
 

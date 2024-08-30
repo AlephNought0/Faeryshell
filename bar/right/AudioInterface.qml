@@ -154,25 +154,9 @@ PopupWindow {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 25
 
-                    onPressedChanged: {
-                        if(!pressed) {
-                            value = Pipewire.defaultAudioSink.audio.volume
-                        }
-                    }
-
                     onValueChanged: {
                         if(pressed) {
                             Pipewire.defaultAudioSink.audio.volume = value
-                        }
-                    }
-
-                    Connections {
-                        target: Pipewire.defaultAudioSink.audio
-
-                        function onVolumeChanged() {
-                            if(!output.pressed) {
-                                output.value = Pipewire.defaultAudioSink.audio.volume
-                            }
                         }
                     }
 
@@ -298,25 +282,9 @@ PopupWindow {
                     Layout.preferredHeight: 25
                     clip: true
 
-                    onPressedChanged: {
-                        if(!pressed) {
-                            value = Pipewire.defaultAudioSource.audio.volume
-                        }
-                    }
-
                     onValueChanged: {
                         if(pressed) {
                             Pipewire.defaultAudioSource.audio.volume = value
-                        }
-                    }
-
-                    Connections {
-                        target: Pipewire.defaultAudioSource.audio
-
-                        function onVolumeChanged() {
-                            if(!input.pressed) {
-                                input.value = Pipewire.defaultAudioSource.audio.volume
-                            }
                         }
                     }
 

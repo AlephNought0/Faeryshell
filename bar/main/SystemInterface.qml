@@ -3,6 +3,7 @@ import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Quickshell.Services.UPower
 
 import ".."
 import "../../"
@@ -112,15 +113,28 @@ PopupWindow {
             Layout.preferredWidth: 150
             color: "purple"
 
+            property UPowerDevice bat: UPower.displayDevice
+            property string currentTab: ""
+            property var buttons: [
+                { button: "internet", value: 0.4, icon: "󰖩" },
+                { button: "battery", value: bat.percentage, icon: "" },
+                { button: "bluetooth", value: 0, icon: ""},
+                { button: "system", value: 1, icon: "" }
+            ]
+
             ColumnLayout {
                 anchors.fill: parent
                 spacing: 10
 
                 Repeater {
-                    model: 4
+                    model: controls.buttons
 
                     ProgressButton {
-                        progress: modelData / 10
+                        id: meow
+                        required property var modelData
+
+                        progress: modelData.value
+                        icon: modelData.icon
                     }
                 }
             }
