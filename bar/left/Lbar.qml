@@ -155,7 +155,6 @@ RowLayout {
             spacing: 30
             anchors.centerIn: parent
 
-
             RowLayout {
                 Text {
                     text: ""

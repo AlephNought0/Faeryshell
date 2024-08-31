@@ -16,6 +16,18 @@ Singleton {
     property bool playing: false 
     property MprisPlayer trackedPlayer: null
 
+    Component.onCompleted: {
+        for(const player of Mpris.players.values) {
+            if(player.playbackState === MprisPlaybackState.Playing) {
+                playing = true
+                
+                if(root.trackedPlayer != player) {
+                    root.trackedPlayer = player
+                } 
+            }
+        }
+    }
+
     Connections {
         target: Mpris.players
 

@@ -34,7 +34,7 @@ RowLayout {
             getDate()
         }
 
-        onMinutesChanged: {
+        onMinuteChanged: {
             getDate()
         }
     }

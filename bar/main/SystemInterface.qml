@@ -62,7 +62,7 @@ PopupWindow {
 
                 RowLayout {
                     anchors.fill: parent
-                    spacing: 5
+                    spacing: -150
 
                     Image {
                         sourceSize.width: 100
