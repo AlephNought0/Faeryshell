@@ -14,16 +14,18 @@ RowLayout {
         id: trayIcons
         Layout.minimumWidth: 45
         Layout.preferredWidth: trayRow.width + 20
+        color: Cfg.colors.primaryColor
         height: panel.height - 5
         radius: 10
-        color: Cfg.colors.primaryColor
         clip: true
 
         property var selectedMenu: null
+        property int allItems: SystemTray.items.values.length
 
         RowLayout {
             id: trayRow
             height: 35
+            layoutDirection: Qt.RightToLeft
 
             anchors {
                 right: parent.right
@@ -35,13 +37,12 @@ RowLayout {
                 id: test
                 model: SystemTray.items
 
-                delegate: Item {
+                Item {
                     id: iconMenu
                     Layout.fillHeight: true
                     implicitWidth: 25
 
                     property bool isOpen: false
-                    property int i: index + 1
 
                     Timer {
                         id: openDelay
@@ -96,8 +97,9 @@ RowLayout {
                     MenuList {
                         id: itemMenu
                         items: trayMenu == null ? [] : trayMenu.children
-                        offset: iconMenu.i
+                        offset: trayIcons.allItems - SystemTray.items.indexOf(modelData)
                         visible: itemMenu == trayIcons.selectedMenu && iconMenu.isOpen
+
                         Connections {
                             target: trayIcons
 

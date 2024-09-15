@@ -89,7 +89,6 @@ PopupWindow {
                             source: "MenuItem.qml"
                             width: childrenRect.width
                             height: childrenRect.height
-                            bindValues: false
 
                             property var entry: modelData
                             property var offset: root.offset
