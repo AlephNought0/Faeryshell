@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Services.Pipewire
 import Quickshell.Services.UPower
 
+import ".."
 import "../../"
 
 RowLayout {
@@ -44,31 +45,15 @@ RowLayout {
         height: panel.height - 5
         radius: 10
         Layout.alignment: Qt.AlignLeft
-        color: "purple"
+        color: Cfg.colors.primaryColor
 
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
+        Hover {
+            item: parent
             z: 100
-
-            onEntered: {
-                parent.color = "grey"
-            }
-
-            onExited: {
-                parent.color = "purple"
-            }
 
             onClicked: {
                 audioPopup.item.targetVisible = !audioPopup.item.targetVisible
             }
-        }
-
-        PwObjectTracker {
-            objects: [
-                Pipewire.defaultAudioSink,
-                Pipewire.defaultAudioSource
-            ]
         }
 
         RowLayout {
@@ -79,8 +64,8 @@ RowLayout {
                 id: input
 
                 Text {
-                    text: Math.floor((Pipewire.defaultAudioSource.audio.volume * 100)) == 0 || 
-                    Pipewire.defaultAudioSource.audio.muted ? "" : ""
+                    text: Cfg.pipewire.source != null ? (Math.floor((Cfg.pipewire.source.audio.volume * 100)) == 0 || 
+                    Cfg.pipewire.source.audio.muted ? "" : "") : null
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
@@ -90,14 +75,14 @@ RowLayout {
                         acceptedButtons: Qt.RightButton
 
                         onClicked: {
-                            Pipewire.defaultAudioSource.audio.muted = !Pipewire.defaultAudioSource.audio.muted
+                            Cfg.pipewire.source.audio.muted = !Cfg.pipewire.source.audio.muted
                         }
                     }
                 }
 
                 Text {
-                    text: Pipewire.defaultAudioSource != null ? 
-                    `${Math.floor(Pipewire.defaultAudioSource.audio.volume * 100)}%` : "100%" 
+                    text: Cfg.pipewire.source != null ? 
+                    `${Math.floor(Cfg.pipewire.source.audio.volume * 100)}%` : "100%" 
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white" 
@@ -107,11 +92,11 @@ RowLayout {
 
                         onWheel: event => {
                             if(event.angleDelta.y > 0) {
-                                Pipewire.defaultAudioSource.audio.volume += 0.01
+                                Cfg.pipewire.source.audio.volume += 0.01
                             }
 
                             else {
-                                Pipewire.defaultAudioSource.audio.volume -= 0.01
+                                Cfg.pipewire.source.audio.volume -= 0.01
                             }
                         }
                     }
@@ -122,8 +107,8 @@ RowLayout {
                 id: output
 
                 Text {
-                    text: Math.floor((Pipewire.defaultAudioSink.audio.volume * 100)) == 0 ||
-                    Pipewire.defaultAudioSink.audio.muted ? "" : ""
+                    text: Cfg.pipewire.sink != null ? (Math.floor((Cfg.pipewire.sink.audio.volume * 100)) == 0 ||
+                    Cfg.pipewire.sink.audio.muted ? "" : "") : null
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
@@ -133,14 +118,14 @@ RowLayout {
                         acceptedButtons: Qt.RightButton
 
                         onClicked: {
-                            Pipewire.defaultAudioSink.audio.muted = !Pipewire.defaultAudioSink.audio.muted
+                            Cfg.pipewire.sink.audio.muted = !Cfg.pipewire.sink.audio.muted
                         }
                     }
                 }
 
                 Text {
-                    text: Pipewire.defaultAudioSink != null ? 
-                    `${Math.floor(Pipewire.defaultAudioSink.audio.volume * 100)}%` : "100%" 
+                    text: Cfg.pipewire.sink != null ? 
+                    `${Math.floor(Cfg.pipewire.sink.audio.volume * 100)}%` : "100%" 
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
@@ -150,11 +135,11 @@ RowLayout {
 
                         onWheel: event => {
                             if(event.angleDelta.y > 0) {
-                                Pipewire.defaultAudioSink.audio.volume += 0.01
+                                Cfg.pipewire.sink.audio.volume += 0.01
                             }
 
                             else {
-                                Pipewire.defaultAudioSink.audio.volume -= 0.01
+                                Cfg.pipewire.sink.audio.volume -= 0.01
                             }
                         }
                     }
@@ -169,11 +154,10 @@ RowLayout {
         height: panel.height - 5
         radius: 10
         Layout.alignment: Qt.AlignRight
-        color: "purple"
+        color: Cfg.colors.primaryColor
         clip: true
 
         property bool isHovered: false
-        property UPowerDevice bat: UPower.displayDevice
 
         RowLayout {
             spacing: 10
@@ -189,7 +173,7 @@ RowLayout {
                 source: "../../icons/battery.svg"
 
                 Rectangle {
-                    width: (parent.width - 13.5) * sysWidget.bat.percentage
+                    width: Cfg.bat != null ? ((parent.width - 13.5) * Cfg.bat.percentage) : null
                     height: parent.height - 22
                     color: "white"
 
@@ -217,18 +201,15 @@ RowLayout {
             }
         }
 
-        MouseArea {
+        Hover {
             id: mouse
-            anchors.fill: parent
-            hoverEnabled: true
+            item: parent
 
             onEntered: {
-                parent.color = "grey"
                 parent.isHovered = true
             }
 
             onExited: {
-                parent.color = "purple"
                 parent.isHovered = false
             }
 

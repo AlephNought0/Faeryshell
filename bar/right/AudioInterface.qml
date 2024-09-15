@@ -50,7 +50,7 @@ PopupWindow {
         radius: 15
         y: -parent.height
         layer.enabled: true
-        color: "purple"
+        color: Cfg.colors.primaryFixedDim
 
         ColumnLayout {
             spacing: 10
@@ -79,10 +79,10 @@ PopupWindow {
                         height: 25
                         width: childrenRect.width + 15
                         radius: 5
-                        color: "grey"
+                        color: Cfg.colors.thirdaryColor
 
                         Text {
-                            text: Pipewire.defaultAudioSink.description
+                            text: Cfg.pipewire.sink.description
                             elide: Text.ElideRight
                             font.family: Cfg.font
                             font.pixelSize: 20
@@ -103,8 +103,8 @@ PopupWindow {
                 }
 
                 Text {
-                    text: Math.floor((Pipewire.defaultAudioSink.audio.volume * 100)) == 0 ||
-                    Pipewire.defaultAudioSink.audio.muted ? "" : ""
+                    text: Math.floor((Cfg.pipewire.sink.audio.volume * 100)) == 0 ||
+                    Cfg.pipewire.sink.audio.muted ? "" : ""
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
@@ -115,7 +115,7 @@ PopupWindow {
                         icon: parent
 
                         onClicked: {
-                            Pipewire.defaultAudioSink.audio.muted = !Pipewire.defaultAudioSink.audio.muted
+                            Cfg.pipewire.sink.audio.muted = !Cfg.pipewire.sink.audio.muted
                         }
                     }
 
@@ -147,7 +147,7 @@ PopupWindow {
 
                 Slider {
                     id: output
-                    value: Pipewire.defaultAudioSink.audio.volume
+                    value: Cfg.pipewire.sink.audio.volume
                     Layout.column: 0
                     Layout.row: 2
                     Layout.columnSpan: 3
@@ -156,22 +156,20 @@ PopupWindow {
 
                     onValueChanged: {
                         if(pressed) {
-                            Pipewire.defaultAudioSink.audio.volume = value
+                            Cfg.pipewire.sink.audio.volume = value
                         }
                     }
 
                     background: Rectangle {
-                        width: output.availableWidth
                         height: 15
                         radius: 6
-                        clip: true
-                        color: "#bdbebf"
+                        color: Cfg.colors.secondaryColor
 
                         Rectangle {
                             width: output.visualPosition * parent.width
                             height: parent.height
-                            color: "#21be2b"
-                            radius: 6
+                            radius: 4
+                            color: Cfg.colors.errorContainer
                         }
                     }
 
@@ -198,10 +196,10 @@ PopupWindow {
                         height: 25
                         width: childrenRect.width + 15
                         radius: 5
-                        color: "grey"
+                        color: Cfg.colors.thirdaryColor
 
                         Text {
-                            text: Pipewire.defaultAudioSource.description
+                            text: Cfg.pipewire.source.description
                             elide: Text.ElideRight
                             font.family: Cfg.font
                             font.pixelSize: 20
@@ -228,20 +226,20 @@ PopupWindow {
                     width: 20
 
                     Text {
-                        text: Math.floor((Pipewire.defaultAudioSource.audio.volume * 100)) == 0 || 
-                        Pipewire.defaultAudioSource.audio.muted ? "" : ""
+                        text: Math.floor((Cfg.pipewire.source.audio.volume * 100)) == 0 || 
+                        Cfg.pipewire.source.audio.muted ? "" : ""
                         font.family: Cfg.font
                         font.pixelSize: 24
                         color: "white"
                         Layout.column: 1
                         Layout.row: 1
-                        x: Pipewire.defaultAudioSource.audio.muted ? -6.5 : 0
+                        x: Cfg.pipewire.source != null ? (Cfg.pipewire.source.audio.muted ? -6.5 : 0) : null
 
                         ClickableIcon {
                             icon: parent
 
                             onClicked: {
-                                Pipewire.defaultAudioSource.audio.muted = !Pipewire.defaultAudioSource.audio.muted
+                                Cfg.pipewire.source.audio.muted = !Cfg.pipewire.source.audio.muted
                             }
                         }
 
@@ -274,7 +272,7 @@ PopupWindow {
 
                 Slider {
                     id: input
-                    value: Pipewire.defaultAudioSource.audio.volume
+                    value: Cfg.pipewire.source.audio.volume
                     Layout.column: 0
                     Layout.row: 2
                     Layout.columnSpan: 3
@@ -284,7 +282,7 @@ PopupWindow {
 
                     onValueChanged: {
                         if(pressed) {
-                            Pipewire.defaultAudioSource.audio.volume = value
+                            Cfg.pipewire.source.audio.volume = value
                         }
                     }
 
@@ -293,14 +291,14 @@ PopupWindow {
                         height: 15
                         radius: 6
                         clip: true
-                        color: "#bdbebf"
+                        color: Cfg.colors.secondaryColor
 
                         Rectangle {
                             width: input.visualPosition * parent.width
                             height: parent.height
                             clip: true
-                            radius: 6
-                            color: "#21be2b"
+                            radius: 4
+                            color: Cfg.colors.errorContainer
                         }
                     }
 

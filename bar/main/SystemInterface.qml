@@ -48,6 +48,7 @@ PopupWindow {
         width: parent.width
         height: parent.height
         x: parent.width + width
+        spacing: 10
 
         ColumnLayout {
             Layout.alignment: Qt.AlignTop
@@ -58,11 +59,11 @@ PopupWindow {
                 radius: 10
                 Layout.preferredWidth: 350
                 Layout.preferredHeight: 125
-                color: "purple"
+                color: Cfg.colors.primaryFixedDim
 
                 RowLayout {
                     anchors.fill: parent
-                    spacing: -150
+                    spacing: -80
 
                     Image {
                         sourceSize.width: 100
@@ -94,16 +95,24 @@ PopupWindow {
                 radius: 10
                 Layout.preferredWidth: 350
                 Layout.preferredHeight: 125
-                color: "purple"
+                color: Cfg.colors.primaryFixedDim
             }
         }
 
-        Rectangle {
+        /*Rectangle {
             id: main
             radius: 15
             Layout.fillHeight: true
             Layout.preferredWidth: 350
-            color: "purple"
+            color: Cfg.primaryFixedDim
+        }*/
+
+        StackLayout {
+            id: main
+            Layout.fillHeight: true
+            Layout.preferredWidth: 350
+
+            Battery {}
         }
 
         Rectangle {
@@ -111,13 +120,11 @@ PopupWindow {
             radius: 15
             Layout.fillHeight: true
             Layout.preferredWidth: 150
-            color: "purple"
+            color: Cfg.colors.primaryFixedDim
 
-            property UPowerDevice bat: UPower.displayDevice
-            property string currentTab: ""
             property var buttons: [
                 { button: "internet", value: 0.4, icon: "󰖩" },
-                { button: "battery", value: bat.percentage, icon: "" },
+                { button: "battery", value: Cfg.bat.percentage, icon: "" },
                 { button: "bluetooth", value: 0, icon: ""},
                 { button: "system", value: 1, icon: "" }
             ]

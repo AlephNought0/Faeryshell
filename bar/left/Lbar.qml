@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Services.SystemTray
 
+import ".."
 import "../../"
 
 RowLayout {
@@ -15,7 +16,7 @@ RowLayout {
         Layout.preferredWidth: trayRow.width + 20
         height: panel.height - 5
         radius: 10
-        color: "purple"
+        color: Cfg.colors.primaryColor
         clip: true
 
         property var selectedMenu: null
@@ -23,7 +24,6 @@ RowLayout {
         RowLayout {
             id: trayRow
             height: 35
-            layoutDirection: Qt.RightToLeft
 
             anchors {
                 right: parent.right
@@ -32,14 +32,16 @@ RowLayout {
             }
 
             Repeater {
+                id: test
                 model: SystemTray.items
 
-                Item {
+                delegate: Item {
                     id: iconMenu
                     Layout.fillHeight: true
                     implicitWidth: 25
 
                     property bool isOpen: false
+                    property int i: index + 1
 
                     Timer {
                         id: openDelay
@@ -94,6 +96,7 @@ RowLayout {
                     MenuList {
                         id: itemMenu
                         items: trayMenu == null ? [] : trayMenu.children
+                        offset: iconMenu.i
                         visible: itemMenu == trayIcons.selectedMenu && iconMenu.isOpen
                         Connections {
                             target: trayIcons
@@ -109,18 +112,8 @@ RowLayout {
             }
         }
 
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            propagateComposedEvents: true
-
-            onEntered: {
-                parent.color = "grey"
-            }
-
-            onExited: {
-                parent.color = "purple"
-            }
+        Hover {
+            item: parent
         }
 
         Behavior on Layout.preferredWidth {
@@ -135,19 +128,10 @@ RowLayout {
         Layout.preferredWidth: sysInfo.width + 30
         height: panel.height - 5
         radius: 10
-        color: "purple"
+        color: Cfg.colors.primaryColor
 
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-
-            onEntered: {
-                parent.color = "grey"
-            }
-
-            onExited: {
-                parent.color = "purple"
-            }
+        Hover {
+            item: parent
         }
 
         RowLayout {

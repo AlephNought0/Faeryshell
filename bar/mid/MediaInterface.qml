@@ -13,7 +13,7 @@ PopupWindow {
     anchor.rect.x: (panel.width / 2 - width / 2)
     anchor.rect.y: panel.height + 15
     anchor.window: panel
-    width: 900
+    width: 950
     height: 350
     color: "transparent"
 
@@ -48,8 +48,7 @@ PopupWindow {
         height: 300
         radius: 15
         y: -parent.height
-        layer.enabled: true
-        color: "pink"
+        color: "transparent"
 
         property int spacing: 40
 
@@ -60,7 +59,7 @@ PopupWindow {
             width: parent.width * 0.45
             anchors.left: parent.left
             z: 2
-            color: "purple"
+            color: Cfg.colors.primaryColor
 
             Image {
                 id: sourceItem
@@ -96,7 +95,7 @@ PopupWindow {
 
         Rectangle {
             id: controls
-            color: "orange"
+            color: Cfg.colors.secondaryColor
             radius: 15
             height: parent.height
             width: parent.width * 0.15
@@ -212,7 +211,7 @@ PopupWindow {
         }
 
         Rectangle {
-            color: "#06768D"
+            color: Cfg.colors.primaryFixedDim
             radius: 15
             height: parent.height
             z: 0

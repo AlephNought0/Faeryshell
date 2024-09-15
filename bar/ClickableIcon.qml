@@ -1,5 +1,7 @@
 import QtQuick
 
+import ".."
+
 MouseArea {
     anchors.fill: parent
     hoverEnabled: true
@@ -7,7 +9,7 @@ MouseArea {
     required property var icon
 
     onEntered: {
-        icon.color = "cyan"
+        icon.color = Cfg.colors.errorContainer
     }
 
     onExited: {
@@ -27,7 +29,7 @@ MouseArea {
         running: false
 
         onTriggered: {
-            icon.color = "cyan"
+            icon.color = Cfg.colors.errorContainer
         }
     }
 }

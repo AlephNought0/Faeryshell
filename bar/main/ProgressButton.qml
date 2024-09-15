@@ -28,7 +28,7 @@ Canvas {
             hoverEnabled: true
 
             onEntered: {
-                parent.color = "cyan"
+                parent.color = Cfg.colors.thirdaryColor
             }
 
             onExited: {
@@ -43,12 +43,12 @@ Canvas {
 
             Timer {
                 id: timer
-                interval: 75
+                interval: 150
                 repeat: false
                 running: false
 
                 onTriggered: {
-                    button.color = "cyan"
+                    button.color = Cfg.colors.thirdaryColor
                 }
             }
         }

@@ -7,6 +7,7 @@ import "./bar/left"
 import "./bar/mid"
 import "./bar/right"
 import "./bar/main"
+import "./functions"
 
 ShellRoot {
     Variants {
@@ -19,6 +20,7 @@ ShellRoot {
                 height: 40
                 width: screen.width
                 screen: modelData
+                WlrLayershell.namespace: "ohio"
                 color: "transparent"
                 anchors {
                     top: true
@@ -50,6 +52,8 @@ ShellRoot {
                         rightMargin: 10
                     }
                 }
+
+                Swww{}
 
                 LazyLoader {
                     id: mediaPopup

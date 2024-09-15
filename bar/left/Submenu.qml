@@ -59,7 +59,7 @@ PopupWindow {
             height: menuColumn.height + 22
             radius: 10
             opacity: 0
-            color: "purple"
+            color: Cfg.colors.primaryFixedDim
 
             onOpacityChanged: {
                 if(trayList.opacity == 0) {

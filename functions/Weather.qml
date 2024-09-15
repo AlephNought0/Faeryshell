@@ -8,9 +8,19 @@ Singleton {
     property string icon
     property string temp
     property string weather
-    property bool isDay: false // I count afternoon as day because whatever
-    property bool isEvening: false
-    property bool isNight: false
+    property string city
+    property string currentTime
+
+    property bool isRaining: false
+    property bool isSnowing: false
+    property bool isFoggy: false
+    property bool isSleet: false
+
+    signal init()
+
+    onCityChanged: {
+        cycleTime.running = true
+    }
 
     SystemClock {
         id: clock
@@ -18,15 +28,29 @@ Singleton {
         property string hour: hours
         property string minute: minutes
 
-        onMinuteChanged: {
-            cycleTime.running = true
+        onMinutesChanged: {
+            weath.running = true
+        }
+    }
+
+    Process {
+        id: location
+        command: ["curl", "ipinfo.io"]
+        running: true
+
+        stdout: SplitParser {
+            splitMarker: ""
+            onRead: data => {
+                var jsonObject = JSON.parse(data)
+                city = jsonObject.city
+            }
         }
     }
 
     Process { //Weather
         id: weath
-        command: ["curl", "wttr.in/?format=%C|%t"]
-        running: true
+        command: ["curl", `wttr.in/${city}?format=%C|%t`]
+        running: false
 
         stdout: SplitParser {
             splitMarker: ""
@@ -38,7 +62,7 @@ Singleton {
 
                 var name = ""
 
-                if(isDay || isEvening) {
+                if(currentTime === "day" || currentTime === "evening") {
                     name = "sunny"
                 }
 
@@ -49,11 +73,11 @@ Singleton {
                 switch(weather) { //https://github.com/chubin/wttr.in/blob/235581925fa2e09a42e9631e2c23294a1972ee0e/share/translations/mk.txt 386
                     case "Clear":
                     case "Sunny":
-                        if(isNight) weather = "Night"
+                        if(currentTime == "night") { weather = "Night" }
                         icon = `../../icons/${name}.svg`
                         break
 
-                    case "Partly Cloudy":
+                    case "Partly cloudy":
                         icon = `../../icons/${name}_cloudy.svg`
                         break
 
@@ -71,18 +95,31 @@ Singleton {
                     case "Fog":
                     case "Freezing fog":
                         icon = "../../icons/mist.svg"
+                        isSleet = false
+                        isSnowing = false
+                        isRaining = false
+                        isFoggy = true
                         break
 
                     case "Blowing snow":
                     case "Blizzard":
                         icon = "../../icons/blowing_snow.svg"
+                        isSleet = false
+                        isRaining = false
+                        isFoggy = false
+                        isSnowing = true
                         break
 
                     case "Patchy light drizzle":
                     case "Light drizzle":
                     case "Patchy rain nearby":
                     case "Patchy rain possible":
+                    case "Light drizzle and rain":
                         icon = `../../icons/${name}_patchy_rain.svg`
+                        isSleet = false
+                        isFoggy = false
+                        isSnowing = false
+                        isRaining = true
                         break
                     
                     case "Freezing drizzle":
@@ -93,9 +130,22 @@ Singleton {
                     case "Moderate or heavy sleet":
                     case "Patchy sleet possible":
                     case "Patchy freezing drizzle possible":
-                    case "Light sleet showers"
+                    case "Light sleet showers":
                     case "Moderate or heavy sleet showers":
                         icon = "../../icons/sleet.svg"
+                        isFoggy = false
+                        isSnowing = false
+                        isRaining = false
+                        isSleet = true
+                        break
+
+                    case "Rain, light rain":
+                        icon = `../../icons/${name}_light_raining.svg`
+                        weather = "Rain"
+                        isSleet = false
+                        isFoggy = false
+                        isSnowing = false
+                        isRaining = true
                         break
 
                     case "Patchy light rain":
@@ -104,12 +154,20 @@ Singleton {
                     case "Moderate rain":
                     case "Light rain shower":
                         icon = `../../icons/${name}_light_raining.svg`
+                        isSleet = false
+                        isFoggy = false
+                        isSnowing = false
+                        isRaining = true
                         break
 
                     case "Heavy rain at times":
                     case "Heavy rain":
                     case "Moderate or heavy rain shower":
                         icon = "../../icons/heavy_raining.svg"
+                        isSleet = false
+                        isFoggy = false
+                        isSnowing = false
+                        isRaining = true
                         break
         
                     case "Patchy light snow":
@@ -119,6 +177,10 @@ Singleton {
                     case "Patchy snow possible":
                     case "Light snow showers":
                         icon = `../../icons/${name}_snowing.svg`
+                        isSleet = false
+                        isFoggy = false
+                        isRaining = false
+                        isSnowing = true
                         break
 
                     case "Patchy heavy snow":
@@ -126,20 +188,30 @@ Singleton {
                     case "Ice pellets": //Idk what to give u
                     case "Moderate or heavy snow showers":
                         icon = "../../icons/snowing.svg"
+                        isSleet = false
+                        isFoggy = false
+                        isRaining = false
+                        isSnowing = true
                         break
 
                     case "Torrential rain shower":
                         icon = "../../icons/extreme_rain.svg"
+                        isSleet = false
+                        isFoggy = false
+                        isSnowing = false
+                        isRaining = true
                         break
                 }
+                
+                init()
             }
         }
     }
 
     Process { //Time
         id: cycleTime
-        command: ["curl", "wttr.in/?format=%S|%s|%d"]
-        running: true
+        command: ["curl", `wttr.in/${city}?format=%S|%s|%d`]
+        running: false
 
         stdout: SplitParser {
             splitMarker: ""
@@ -149,34 +221,50 @@ Singleton {
                 var evening = times[1].split(":")
                 var night = times[2].split(":")
 
-                if(clock.hour >= Number(sunrise[0]) && clock.minute >= Number(sunrise[1])) {
-                    isNight = false
-                    isEvening = false
-                    isDay = true
+                if(clock.hour == Number(sunrise[0])) {
+                    if(clock.minute >= Number(sunrise[1])) {
+                        currentTime = "day"
+                    }
                 }
 
-                if(clock.hour >= Number(evening[0]) - 1 && clock.minute >= Number(evening[0])) {
-                    isDay = false
-                    isNight = false
-                    isEvening = true
+                else if(clock.hour > Number(sunrise[0]) && 
+                (clock.hour <= Number(evening[0]) - 1 && currentTime !== "evening")) {
+                    currentTime = "day"
                 }
 
-                if((clock.hour >= Number(night[0]) && clock.minute >= Number(night[1])) || 
-                (clock.hour >= 0 && clock.hour < Number(sunrise[0]))) {
-                    isEvening = false
-                    isDay = false
-                    isNight = true
+                if(clock.hour == Number(evening[0]) - 1) {
+                    if(clock.minute >= Number(evening[1])) {
+                        currentTime = "evening"
+                    }
                 }
+
+                else if(clock.hour > Number(evening[0]) - 1 && 
+                (clock.hour <= Number(night[0]) && currentTime !== "night")) {
+                    currentTime = "evening"
+                }
+
+                if(clock.hour == Number(night[0])) {
+                    if(clock.minute >= Number(night[1])) {
+                        currentTime = "night"
+                    }
+                }
+
+                else if((clock.hour > Number(night[0])) || 
+                (clock.hour >= 0 && clock.hour <= Number(sunrise[0]) && currentTime !== "day")) {
+                    currentTime = "night"
+                }
+
+                weath.running = true
             }
         }
     }
-    
+
     Timer {
-        interval: 30000
+        interval: 1800000
         running: true
         repeat: true
         onTriggered: {
-            weath.running = true
+            location.running = true
         }
     }
 }

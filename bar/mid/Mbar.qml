@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
+import ".."
 import "../../"
 import "../../functions"
 
@@ -10,21 +11,12 @@ Rectangle {
     width: 350
     radius: 10
     clip: true
-    color: "purple"
+    color: Cfg.colors.primaryColor
 
     property int spacing: 20
 
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-
-        onEntered: {
-            parent.color = "grey"
-        }
-
-        onExited: {
-            parent.color = "purple"
-        }
+    Hover {
+        item: parent
 
         onClicked: {
             mediaPopup.item.targetVisible = !mediaPopup.item.targetVisible

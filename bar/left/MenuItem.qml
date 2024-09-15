@@ -15,6 +15,7 @@ Rectangle {
     anchors.fill: parent
 
     required property var entry
+    property int offset
     property bool showChildren: false
 
     Timer {
@@ -35,14 +36,13 @@ Rectangle {
         visible: !entry.isSeparator
 
         onEntered: {
-            parent.color = "gray"
+            parent.color = Cfg.colors.thirdaryColor
 
             if(entry.hasChildren) {
                 const window = QsWindow.window
-                const widgetRect = window.contentItem.mapFromItem(tr, trayList.width - 5, trayList.height * 0.55)
+                const widgetRect = window.contentItem.mapFromItem(root, root.width + (root.offset * 30), root.height + 10)
 
                 children.anchor.rect = widgetRect
-
                 children.targetVisible = true
             }
         }
@@ -117,11 +117,11 @@ Rectangle {
                 }
             }
         }
+    }
 
-        Submenu {
-            id: children
-            items: openChildren.children
-            visible: children.targetVisible || children.hovered || row.isOpen
-        }
+    Submenu {
+        id: children
+        items: openChildren.children
+        visible: children.targetVisible || children.hovered || row.isOpen
     }
 }

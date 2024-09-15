@@ -15,6 +15,7 @@ PopupWindow {
     color: "transparent"
 
     required property var items
+    required property int offset
     property real maxWidth: 0
     property bool hovered: false
     property bool targetVisible: false
@@ -60,7 +61,7 @@ PopupWindow {
             height: menuColumn.height + 22
             radius: 10
             opacity: 0.1
-            color: "purple"
+            color: Cfg.colors.primaryFixedDim
 
             onOpacityChanged: {
                 if(trayList.opacity == 0) {
@@ -81,7 +82,7 @@ PopupWindow {
                         height: modelData.isSeparator ? 14 : childrenRect.height
                         width: childrenRect.width
 
-                        required property var modelData;
+                        required property var modelData
 
                         BoundComponent {
                             id: menuItem
@@ -91,6 +92,7 @@ PopupWindow {
                             bindValues: false
 
                             property var entry: modelData
+                            property var offset: root.offset
 
                             Component.onCompleted: {
                                 if(root.maxWidth < width) {
