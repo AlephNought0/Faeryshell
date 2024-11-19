@@ -62,6 +62,7 @@ RowLayout {
 
             RowLayout {
                 id: input
+                spacing: Cfg.pipewire.source != null ? (Cfg.pipewire.source.audio.muted ? -1 : 5) : null
 
                 Text {
                     text: Cfg.pipewire.source != null ? (Math.floor((Cfg.pipewire.source.audio.volume * 100)) == 0 || 
@@ -69,6 +70,7 @@ RowLayout {
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
+                    Layout.leftMargin: Cfg.pipewire.source != null ? (Cfg.pipewire.source.audio.muted ? -5 : 0) : null
 
                     MouseArea {
                         anchors.fill: parent

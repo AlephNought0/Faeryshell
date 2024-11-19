@@ -82,7 +82,7 @@ PopupWindow {
                         color: Cfg.colors.thirdaryColor
 
                         Text {
-                            text: Cfg.pipewire.sink.description
+                            text: Cfg.pipewire.sink != null ? Cfg.pipewire.sink.description : null
                             elide: Text.ElideRight
                             font.family: Cfg.font
                             font.pixelSize: 20
@@ -103,8 +103,8 @@ PopupWindow {
                 }
 
                 Text {
-                    text: Math.floor((Cfg.pipewire.sink.audio.volume * 100)) == 0 ||
-                    Cfg.pipewire.sink.audio.muted ? "" : ""
+                    text: Cfg.pipewire.sink != null ? (Math.floor((Cfg.pipewire.sink.audio.volume * 100)) == 0 ||
+                    Cfg.pipewire.sink.audio.muted ? "" : "") : null
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
@@ -147,12 +147,12 @@ PopupWindow {
 
                 Slider {
                     id: output
-                    value: Cfg.pipewire.sink.audio.volume
+                    value: Cfg.pipewire.sink != null ? Cfg.pipewire.sink.audio.volume : null
                     Layout.column: 0
                     Layout.row: 2
                     Layout.columnSpan: 3
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 25
+                    Layout.preferredHeight: 20
 
                     onValueChanged: {
                         if(pressed) {
@@ -161,15 +161,22 @@ PopupWindow {
                     }
 
                     background: Rectangle {
-                        height: 15
-                        radius: 6
+                        height: parent.height
+                        radius: 8
                         color: Cfg.colors.secondaryColor
 
                         Rectangle {
                             width: output.visualPosition * parent.width
                             height: parent.height
-                            radius: 4
+                            radius: 8
                             color: Cfg.colors.errorContainer
+
+                            Behavior on width {
+                                NumberAnimation {
+                                    duration: 100
+                                    easing.type: Easing.OutQuad
+                                }
+                            }
                         }
                     }
 
@@ -199,7 +206,7 @@ PopupWindow {
                         color: Cfg.colors.thirdaryColor
 
                         Text {
-                            text: Cfg.pipewire.source.description
+                            text: Cfg.pipewire.source != null ? Cfg.pipewire.source.description : null
                             elide: Text.ElideRight
                             font.family: Cfg.font
                             font.pixelSize: 20
@@ -226,8 +233,8 @@ PopupWindow {
                     width: 20
 
                     Text {
-                        text: Math.floor((Cfg.pipewire.source.audio.volume * 100)) == 0 || 
-                        Cfg.pipewire.source.audio.muted ? "" : ""
+                        text: Cfg.pipewire.source != null ? (Math.floor((Cfg.pipewire.source.audio.volume * 100)) == 0 || 
+                        Cfg.pipewire.source.audio.muted ? "" : "") : null
                         font.family: Cfg.font
                         font.pixelSize: 24
                         color: "white"
@@ -272,12 +279,12 @@ PopupWindow {
 
                 Slider {
                     id: input
-                    value: Cfg.pipewire.source.audio.volume
+                    value: Cfg.pipewire.source != null ? Cfg.pipewire.source.audio.volume : null
                     Layout.column: 0
                     Layout.row: 2
                     Layout.columnSpan: 3
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 25
+                    Layout.preferredHeight: 20
                     clip: true
 
                     onValueChanged: {
@@ -288,8 +295,8 @@ PopupWindow {
 
                     background: Rectangle {
                         width: input.availableWidth
-                        height: 15
-                        radius: 6
+                        height: parent.height
+                        radius: 8
                         clip: true
                         color: Cfg.colors.secondaryColor
 
@@ -297,8 +304,15 @@ PopupWindow {
                             width: input.visualPosition * parent.width
                             height: parent.height
                             clip: true
-                            radius: 4
+                            radius: 8
                             color: Cfg.colors.errorContainer
+
+                            Behavior on width {
+                                NumberAnimation {
+                                    duration: 100
+                                    easing.type: Easing.OutQuad
+                                }
+                            }
                         }
                     }
 

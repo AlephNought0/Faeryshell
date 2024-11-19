@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Services.UPower
+import Quickshell.Wayland
 
 import ".."
 import "../../"
@@ -14,7 +15,7 @@ PopupWindow {
     anchor.rect.x: panel.width - width
     anchor.rect.y: panel.height + 15
     anchor.window: panel
-    width: 900
+    width: systemInterface.width
     height: 500
     color: "transparent"
 
@@ -45,8 +46,6 @@ PopupWindow {
 
     RowLayout {
         id: systemInterface
-        width: parent.width
-        height: parent.height
         x: parent.width + width
         spacing: 10
 
@@ -62,8 +61,11 @@ PopupWindow {
                 color: Cfg.colors.primaryFixedDim
 
                 RowLayout {
-                    anchors.fill: parent
-                    spacing: -80
+                    spacing: 10
+                    anchors {
+                        left: parent.left
+                        verticalCenter: parent.verticalCenter
+                    }
 
                     Image {
                         sourceSize.width: 100
@@ -91,11 +93,58 @@ PopupWindow {
             }
 
             Rectangle {
-                id: test
                 radius: 10
                 Layout.preferredWidth: 350
                 Layout.preferredHeight: 125
                 color: Cfg.colors.primaryFixedDim
+
+                Rectangle {
+                    id: batteryWidget
+                    width: parent.width - 60
+                    height: 50
+                    radius: 10
+                    anchors.centerIn: parent
+                    color: "#eff0ff"
+
+                    Text {
+                        text: ""
+                        z: 2
+                        font.family: Cfg.font
+                        font.pixelSize: 32
+                        color: "white"
+                        anchors {
+                            left: parent.left
+                            leftMargin: 10
+                            verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    Rectangle {
+                        width: (parent.width - 10) * Cfg.bat.percentage
+                        height: 44
+                        radius: 8
+                        color: Cfg.colors.primaryColor
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: 4
+                        }
+
+                        Behavior on width {
+                            NumberAnimation {
+                                duration: 200
+                            }
+                        }
+                    }
+
+                    Text {
+                        text: `${Cfg.bat.percentage * 100}%`
+                        font.family: Cfg.font
+                        font.pixelSize: 20
+                        color: "white"
+                        anchors.centerIn: parent
+                    }
+                }                
             }
         }
 
@@ -107,12 +156,16 @@ PopupWindow {
             color: Cfg.primaryFixedDim
         }*/
 
-        StackLayout {
+        Rectangle {
             id: main
-            Layout.fillHeight: true
-            Layout.preferredWidth: 350
+            radius: 15
+            Layout.preferredHeight: childrenRect.height
+            Layout.preferredWidth: childrenRect.width
+            color: Cfg.colors.primaryFixedDim
 
-            Battery {}
+            StackLayout {
+                Brightness {}
+            }
         }
 
         Rectangle {
@@ -124,7 +177,7 @@ PopupWindow {
 
             property var buttons: [
                 { button: "internet", value: 0.4, icon: "󰖩" },
-                { button: "battery", value: Cfg.bat.percentage, icon: "" },
+                { button: "brightness", value: Display.brightness, icon: "󰃠" },
                 { button: "bluetooth", value: 0, icon: ""},
                 { button: "system", value: 1, icon: "" }
             ]

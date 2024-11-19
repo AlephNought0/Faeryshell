@@ -73,6 +73,17 @@ Singleton {
         }
     }
 
+    Timer {
+        id: playDelay
+        interval: 100
+        running: false
+        repeat: false
+
+        onTriggered: {
+            root.trackedPlayer.playbackState = MprisPlaybackState.Playing
+        }
+    }
+
     FrameAnimation {
         running: root.playing
 

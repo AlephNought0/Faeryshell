@@ -47,17 +47,21 @@ Item {
         }
     }
 
+    Timer {
+        id: matugenDelay
+        interval: 150
+        running: false
+        repeat: false
+
+        onTriggered: {
+            matugen.running = true
+        }
+    }
+
     Process {
         id: matugen
         command: ["matugen", "--json", "hex", "image", file]
         running: false
-
-        stderr: SplitParser {
-            splitMarker: ""
-            onRead: data => {
-                console.log(data)
-            }
-        }
 
         stdout: SplitParser {
             splitMarker: ""
@@ -70,7 +74,7 @@ Item {
                     Cfg.colors.errorContainer = Qt.alpha(jsonObject.colors.light.error_container, 0.7)
                     Cfg.colors.primaryFixedDim = Qt.alpha(jsonObject.colors.light.primary_fixed_dim, 0.7)
                 } catch (err) {
-                    matugen.running = true
+                    matugenDelay.running = true
                 }
             }
         }

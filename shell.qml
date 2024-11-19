@@ -21,6 +21,7 @@ ShellRoot {
                 width: screen.width
                 screen: modelData
                 WlrLayershell.namespace: "ohio"
+                WlrLayershell.keyboardFocus: "OnDemand"
                 color: "transparent"
                 anchors {
                     top: true

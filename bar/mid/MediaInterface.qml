@@ -3,6 +3,7 @@ import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
+import QtQuick.Controls
 
 import ".."
 import "../../"
@@ -332,6 +333,52 @@ PopupWindow {
                                 movingTitle.running = false
                             }
                         }
+                    }
+                }
+
+                Slider {
+                    id: mediaPos
+                    value: Mpris.trackedPlayer != null ? Mpris.trackedPlayer.position : 0
+                    to: Mpris.trackedPlayer != null ? Mpris.trackedPlayer.length : 0
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.preferredWidth: parent.width - 20
+                    Layout.preferredHeight: 25
+                    clip: true
+
+                    onValueChanged: {
+                        if(pressed) {
+                            Mpris.trackedPlayer.position = value
+                        }
+                    }
+
+                    Connections {
+                        target: Mpris.trackedPlayer
+
+                        function onPositionChanged() {
+                            if(!mediaPos.pressed) {
+                                mediaPos.value = Mpris.trackedPlayer.position
+                            }
+                        }
+                    }
+
+                    background: Rectangle {
+                        width: mediaPos.availableWidth
+                        height: 15
+                        radius: 6
+                        clip: true
+                        color: Cfg.colors.secondaryColor
+
+                        Rectangle {
+                            width: mediaPos.visualPosition * parent.width
+                            height: parent.height
+                            clip: true
+                            radius: 4
+                            color: Cfg.colors.errorContainer
+                        }
+                    }
+
+                    handle: Rectangle {
+                        color: "transparent"
                     }
                 }
             }

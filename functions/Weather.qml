@@ -8,7 +8,6 @@ Singleton {
     property string icon
     property string temp
     property string weather
-    property string city
     property string currentTime
 
     property bool isRaining: false
@@ -17,10 +16,6 @@ Singleton {
     property bool isSleet: false
 
     signal init()
-
-    onCityChanged: {
-        cycleTime.running = true
-    }
 
     SystemClock {
         id: clock
@@ -33,34 +28,30 @@ Singleton {
         }
     }
 
-    Process {
-        id: location
-        command: ["curl", "ipinfo.io"]
-        running: true
+    Timer {
+        id: delay
+        running: false
+        repeat: false
+        interval: 200
 
-        stdout: SplitParser {
-            splitMarker: ""
-            onRead: data => {
-                var jsonObject = JSON.parse(data)
-                city = jsonObject.city
-            }
+        onTriggered: {
+            weath.running = true
         }
     }
 
     Process { //Weather
         id: weath
-        command: ["curl", `wttr.in/${city}?format=%C|%t`]
+        command: ["curl", `wttr.in/?format=j2`]
         running: false
 
         stdout: SplitParser {
             splitMarker: ""
             onRead: data => {
-                var wh = data.split("|")
-
-                weather = wh[0]
-                temp = wh[1].replace("+", "")
-
+                var json = JSON.parse(data)
                 var name = ""
+
+                temp = json.current_condition[0].temp_C + "°C"
+                weather = json.current_condition[0].weatherDesc[0].value
 
                 if(currentTime === "day" || currentTime === "evening") {
                     name = "sunny"
@@ -73,7 +64,7 @@ Singleton {
                 switch(weather) { //https://github.com/chubin/wttr.in/blob/235581925fa2e09a42e9631e2c23294a1972ee0e/share/translations/mk.txt 386
                     case "Clear":
                     case "Sunny":
-                        if(currentTime == "night") { weather = "Night" }
+                        if(currentTime == "night") { name = "night" }
                         icon = `../../icons/${name}.svg`
                         break
 
@@ -202,7 +193,7 @@ Singleton {
                         isRaining = true
                         break
                 }
-                
+
                 init()
             }
         }
@@ -210,8 +201,8 @@ Singleton {
 
     Process { //Time
         id: cycleTime
-        command: ["curl", `wttr.in/${city}?format=%S|%s|%d`]
-        running: false
+        command: ["curl", `wttr.in/?format=%S|%s|%d`]
+        running: true
 
         stdout: SplitParser {
             splitMarker: ""
@@ -254,17 +245,8 @@ Singleton {
                     currentTime = "night"
                 }
 
-                weath.running = true
+                delay.running = true
             }
-        }
-    }
-
-    Timer {
-        interval: 1800000
-        running: true
-        repeat: true
-        onTriggered: {
-            location.running = true
         }
     }
 }
