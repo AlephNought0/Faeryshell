@@ -46,11 +46,31 @@ Item {
     property int year: Cfg.time.year
     property int month: Cfg.time.month
     property int currDay: Cfg.time.day
+    property string seconds: Cfg.time.seconds.padStart(2, '0')
+    property string minutes: Cfg.time.minutes.padStart(2, '0')
+    property string hours: Cfg.time.hours.padStart(2, '0')
     property var monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
     ColumnLayout {
         width: parent.width
         anchors.centerIn: parent
+        spacing: 25
+
+        Item {
+            height: 25
+            width: parent.width
+            Layout.alignment: Qt.AlignTop
+
+            Text {
+                text: `${hours} : ${minutes} : ${seconds}`
+                x: (parent.width / 2) - (width / 2)
+                y: (parent.height / 2 - height / 2)
+                font.pixelSize: 38
+                font.family: Cfg.font
+                font.bold: true
+                color: "white"
+            }
+        }
 
         RowLayout {
             spacing: 100

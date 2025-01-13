@@ -34,7 +34,7 @@ Rectangle {
             id: title
             x: (titleWrap.width / 2) - (width / 2)
             anchors.verticalCenter: parent.verticalCenter
-            text: Mpris.mediaTitle
+            text: Mpris.mediaTitle.length == 0 ? " " : Mpris.mediaTitle 
             font.pixelSize: 16
             font.family: Cfg.font
             color: "white"

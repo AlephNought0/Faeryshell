@@ -11,7 +11,11 @@ RowLayout {
     id: root
     spacing: 10
 
-    property string currDate
+    property string hour: Cfg.time.hours.padStart(2, '0')
+    property string minute: Cfg.time.minutes.padStart(2, '0')
+    property string year: Cfg.time.year
+    property string month: (Cfg.time.month + 1).padStart(2, '0')
+    property string day: Cfg.time.day.padStart(2, '0')
 
     Rectangle { //Audio
         width: 200
@@ -39,7 +43,7 @@ RowLayout {
 
                 Text {
                     text: Cfg.pipewire.source != null ? (Math.floor((Cfg.pipewire.source.audio.volume * 100)) == 0 || 
-                    Cfg.pipewire.source.audio.muted ? "" : "") : null
+                    Cfg.pipewire.source.audio.muted ? "" : "") : " "
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
@@ -83,7 +87,7 @@ RowLayout {
 
                 Text {
                     text: Cfg.pipewire.sink != null ? (Math.floor((Cfg.pipewire.sink.audio.volume * 100)) == 0 ||
-                    Cfg.pipewire.sink.audio.muted ? "" : "") : null
+                    Cfg.pipewire.sink.audio.muted ? "" : "") : " "
                     font.family: Cfg.font
                     font.pixelSize: 20
                     color: "white"
@@ -169,7 +173,7 @@ RowLayout {
 
             Text {
                 id: timeDate
-                text: `${Cfg.time.hours}:${Cfg.time.minutes.padStart(2, '0')} ${Cfg.time.day.padStart(2, '0')}.${(Cfg.time.month + 1).padStart(2, '0')}.${Cfg.time.year}`
+                text: `${hour}:${minute} ${day}.${month}.${year}`
                 font.family: Cfg.font
                 font.pixelSize: 20
                 color: "white"
