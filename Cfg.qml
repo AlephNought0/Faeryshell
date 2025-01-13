@@ -8,16 +8,30 @@ import Quickshell.Services.Pipewire
 Singleton {
     property QtObject colors
     property QtObject pipewire
+    property QtObject time
 
     property string font: "JetBrainsMono NerdFont"
 
     property UPowerDevice bat: UPower.displayDevice
+
+    SystemClock {
+        id: clock
+    }
 
     PwObjectTracker {
         objects: [
             Pipewire.defaultAudioSink,
             Pipewire.defaultAudioSource
         ]
+    }
+
+    time: QtObject {
+        property string hours: clock.hours
+        property string minutes: clock.minutes
+        property string seconds: clock.seconds
+        property string day: new Date().getDate()
+        property string month: new Date().getMonth()
+        property string year: new Date().getFullYear()
     }
 
     colors: QtObject {

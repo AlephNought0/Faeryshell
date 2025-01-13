@@ -9,7 +9,6 @@ Item {
     id: root
 
     property string image: ""
-    property string file: ""
     property string currentTime: Weather.currentTime
 
     Component.onCompleted: {
@@ -17,8 +16,7 @@ Item {
     }
 
     onImageChanged: {
-        file = image //For whatever reason the process simply doesn't recognize image property at startup
-        matugen.running = true
+        matugenDelay.running = true
     }
 
     FolderListModel {
@@ -32,7 +30,6 @@ Item {
                 
                 root.image = item
                 wallpaper.running = true
-                folderModel.folder = "file:///meow"
             }
         }
     }
@@ -60,7 +57,7 @@ Item {
 
     Process {
         id: matugen
-        command: ["matugen", "--json", "hex", "image", file]
+        command: ["matugen", "--json", "hex", "image", image]
         running: false
 
         stdout: SplitParser {

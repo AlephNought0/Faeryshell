@@ -11,13 +11,13 @@ Item {
     height: 500
 
     function daysInMonth(year, month) {
-        return new Date(year, month + 1, 0).getDate()
+        return new Date(year, month, 0).getDate()
     }
 
     function generateMonthGrid(year, month) {
         let grid = []
         let firstDayOfMonth = new Date(year, month, 1).getDay()
-        let daysPrevMonth = daysInMonth(year, month - 1)
+        let daysPrevMonth = daysInMonth(year, month)
         let daysCurrentMonth = daysInMonth(year, month)
         let dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
@@ -43,17 +43,10 @@ Item {
         return grid
     }
 
-    property int year: new Date().getFullYear()
-    property int month: new Date().getMonth()
-    property int currDay: new Date().getDate()
+    property int year: Cfg.time.year
+    property int month: Cfg.time.month
+    property int currDay: Cfg.time.day
     property var monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    property int actualMonth
-    property int actualYear
-
-    Component.onCompleted: {
-        actualMonth = month
-        actualYear = year
-    }
 
     ColumnLayout {
         width: parent.width
@@ -192,7 +185,7 @@ Item {
             delegate: Rectangle {
                 width: monthGrid.cellWidth - 7
                 height: monthGrid.cellHeight - 7
-                color: currDay === modelData.day && month === actualMonth && year === actualYear ? Cfg.colors.thirdaryColor : "transparent"
+                color: currDay === modelData.day && month === parseInt(Cfg.time.month) && year === parseInt(Cfg.time.year) ? Cfg.colors.thirdaryColor : "transparent"
                 radius: 30
 
                 MouseArea {
@@ -205,7 +198,7 @@ Item {
                     }
 
                     onExited: {
-                        parent.color = currDay === modelData.day && month === actualMonth && year === actualYear ? Cfg.colors.thirdaryColor : "transparent"
+                        parent.color = currDay === modelData.day && month === parseInt(Cfg.time.month) && year === parseInt(Cfg.time.year) ? Cfg.colors.thirdaryColor : "transparent"
                     }
                 }
 

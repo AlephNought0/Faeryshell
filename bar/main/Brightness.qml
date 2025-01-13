@@ -13,7 +13,7 @@ Item {
 
     property string currTime: Weather.currentTime
 
-    onCurrTimeChanged: {
+    function checkMode() {
         if(currTime === "night" && autoNight.checked == true) {
             Display.night = true
         }
@@ -23,12 +23,8 @@ Item {
         }
     }
 
-    Settings {
-        id: values
-
-        property string nTemp: "3500"
-        property bool isNightMode: Display.night
-        property bool autoNChecked: autoNight.checked
+    onCurrTimeChanged: {
+        checkMode()
     }
 
     Component.onCompleted: {
@@ -37,9 +33,15 @@ Item {
         Display.night = values.isNightMode
         autoNight.checked = values.autoNChecked
 
-        if(currTime != "night" && autoNight.checked == true) {
-            Display.night = false
-        }
+        checkMode()
+    }
+
+    Settings {
+        id: values
+
+        property string nTemp: "3500"
+        property bool isNightMode: Display.night
+        property bool autoNChecked: autoNight.checked
     }
 
     ColumnLayout {

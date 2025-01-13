@@ -13,33 +13,6 @@ RowLayout {
 
     property string currDate
 
-    SystemClock {
-        id: clock
-
-        property string hour: hours
-        property string minute: minutes
-
-        function getDate() {
-            let today = new Date();
-            let dd = String(today.getDate()).padStart(2, '0');
-            let mm = String(today.getMonth() + 1).padStart(2, '0'); 
-            let yyyy = today.getFullYear();
-
-            let currHour = clock.hour.padStart(2, '0')
-            let currMinute = clock.minute.padStart(2, '0')
-
-            root.currDate = `${currHour}:${currMinute} ${dd}.${mm}.${yyyy}`
-        }
-
-        Component.onCompleted: {
-            getDate()
-        }
-
-        onMinuteChanged: {
-            getDate()
-        }
-    }
-
     Rectangle { //Audio
         width: 200
         height: panel.height - 5
@@ -196,7 +169,7 @@ RowLayout {
 
             Text {
                 id: timeDate
-                text: root.currDate
+                text: `${Cfg.time.hours}:${Cfg.time.minutes.padStart(2, '0')} ${Cfg.time.day.padStart(2, '0')}.${(Cfg.time.month + 1).padStart(2, '0')}.${Cfg.time.year}`
                 font.family: Cfg.font
                 font.pixelSize: 20
                 color: "white"

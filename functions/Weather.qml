@@ -4,12 +4,14 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 
+import ".."
+
 Singleton {
     property string icon
     property string temp
     property string weather
     property string currentTime
-
+    property string min: Cfg.time.minutes
     property bool isRaining: false
     property bool isSnowing: false
     property bool isFoggy: false
@@ -17,15 +19,8 @@ Singleton {
 
     signal init()
 
-    SystemClock {
-        id: clock
-
-        property string hour: hours
-        property string minute: minutes
-
-        onMinutesChanged: {
-            weath.running = true
-        }
+    onMinChanged: {
+        weath.running = true
     }
 
     Timer {
@@ -209,40 +204,23 @@ Singleton {
             splitMarker: ""
             onRead: data => {
                 var times = data.split("|")
-                var sunrise = times[0].split(":")
-                var evening = times[1].split(":")
-                var night = times[2].split(":")
-                
-                if(clock.hour == Number(sunrise[0])) {
-                    if(clock.minute >= Number(sunrise[1])) {
-                        currentTime = "day"
-                    }
-                }
+                var a = times[0].split(":")
+                var b = times[1].split(":")
+                var c = times[2].split(":")
+                var day = parseInt(a[0]) * 60 + parseInt(a[1])
+                var evening = parseInt(b[0]) * 60 + parseInt(b[1])
+                var night = parseInt(c[0]) * 60 + parseInt(c[1])
+                var currTime = parseInt(Cfg.time.hours) * 60 + parseInt(Cfg.time.minutes)
 
-                else if(clock.hour > Number(sunrise[0]) && 
-                (clock.hour <= Number(evening[0]) - 1 && currentTime !== "evening")) {
+                if(currTime >= day && currTime < evening) {
                     currentTime = "day"
                 }
 
-                if(clock.hour == Number(evening[0]) - 1) {
-                    if(clock.minute >= Number(evening[1])) {
-                        currentTime = "evening"
-                    }
-                }
-
-                else if(clock.hour > Number(evening[0]) - 1 && 
-                (clock.hour <= Number(night[0]) && currentTime !== "night")) {
+                else if(currTime >= evening && currTime < night) {
                     currentTime = "evening"
                 }
 
-                if(clock.hour == Number(night[0])) {
-                    if(clock.minute >= Number(night[1])) {
-                        currentTime = "night"
-                    }
-                }
-
-                else if((clock.hour > Number(night[0])) || 
-                (clock.hour >= 0 && clock.hour <= Number(sunrise[0]) && currentTime !== "day")) {
+                else {
                     currentTime = "night"
                 }
 

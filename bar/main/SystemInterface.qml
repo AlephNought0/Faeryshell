@@ -76,7 +76,7 @@ PopupWindow {
 
                     ColumnLayout {
                         Text {
-                            text: Weather.weather
+                            text: Weather.currentTime === "night" && Weather.weather === "Sunny" ? "Night" : Weather.weather
                             font.family: Cfg.font
                             font.bold: true
                             font.pixelSize: 20

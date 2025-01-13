@@ -6,7 +6,6 @@ import QtQuick
 
 Singleton {
     property real brightness
-    property real initBrightness
     property int temperature
     property int nightTemperature
     property int nTempVal
@@ -69,8 +68,8 @@ Singleton {
             onRead: data => {
                 var val = data.split("\n")
                 var i = val[0].split(" ")
-                brightness = (Number(i[0]) / 100)
-                temperature = Number(i[1])
+                brightness = parseInt(i[0]) / 100
+                temperature = parseInt(i[1])
             }
         }
     }
