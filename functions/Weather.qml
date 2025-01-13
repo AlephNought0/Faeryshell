@@ -116,6 +116,7 @@ Singleton {
                     case "Freezing drizzle":
                     case "Heavy freezing drizzle":
                     case "Light freezing rain":
+                    case "Light freezing rain, mist":
                     case "Moderate or heavy freezing rain":
                     case "Light sleet":
                     case "Moderate or heavy sleet":
@@ -211,7 +212,7 @@ Singleton {
                 var sunrise = times[0].split(":")
                 var evening = times[1].split(":")
                 var night = times[2].split(":")
-
+                
                 if(clock.hour == Number(sunrise[0])) {
                     if(clock.minute >= Number(sunrise[1])) {
                         currentTime = "day"

@@ -252,7 +252,6 @@ PopupWindow {
                         id: artist
                         text: Mpris.artist
                         x: (parent.width / 2) - (width / 2)
-                        Layout.alignment: Qt.AlignHCenter
                         font.pixelSize: 24
                         font.bold: true
                         font.family: Cfg.font
@@ -270,8 +269,8 @@ PopupWindow {
                         NumberAnimation {
                             id: movingArtist
                             running: false
-                            property: "x"
                             target: artist
+                            property: "x"
                             from: 0
                             to: -artist.width - mediaInterface.spacing
                             duration: artist.width * 9
@@ -316,8 +315,8 @@ PopupWindow {
                         NumberAnimation {
                             id: movingTitle
                             running: false
-                            property: "x"
                             target: title
+                            property: "x"
                             from: 0
                             to: -title.width - mediaInterface.spacing
                             duration: title.width * 9

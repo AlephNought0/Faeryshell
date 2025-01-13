@@ -14,6 +14,7 @@ Canvas {
 
     required property real progress
     required property string icon
+    required property string button
 
     Rectangle {
         id: button
@@ -39,6 +40,7 @@ Canvas {
             onClicked: {
                 parent.color = "transparent"
                 timer.running = true
+                controls.currWidget(root.button)
             }
 
             Timer {

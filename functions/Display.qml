@@ -13,7 +13,7 @@ Singleton {
     property bool night
 
     onNightChanged: {
-        if(night == true) {
+        if(night) {
             nTempVal = nightTemperature
             changeTemp.running = true
         }

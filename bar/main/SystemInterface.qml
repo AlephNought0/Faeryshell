@@ -20,6 +20,7 @@ PopupWindow {
     color: "transparent"
 
     property bool targetVisible: false
+    property var currSelected
 
     mask: Region { item: systemInterface }
 
@@ -46,7 +47,7 @@ PopupWindow {
 
     RowLayout {
         id: systemInterface
-        x: parent.width + width
+        x: parent.width + width //I have no idea how this makes sense
         spacing: 10
 
         ColumnLayout {
@@ -148,23 +149,89 @@ PopupWindow {
             }
         }
 
-        /*Rectangle {
-            id: main
-            radius: 15
-            Layout.fillHeight: true
-            Layout.preferredWidth: 350
-            color: Cfg.primaryFixedDim
-        }*/
-
         Rectangle {
             id: main
             radius: 15
             Layout.preferredHeight: childrenRect.height
-            Layout.preferredWidth: childrenRect.width
+            Layout.preferredWidth: 380
             color: Cfg.colors.primaryFixedDim
+            clip: true
 
-            StackLayout {
-                Brightness {}
+            Brightness {
+                id: bright
+                visible: true
+                x: visible ? 0 : -main.width - bright.width
+                property bool selected: true
+
+                onXChanged: {
+                    if(x >= main.width + bright.width) {
+                        visible = false
+                    }
+                }
+
+                onSelectedChanged: {
+                    if(selected) {
+                        visible = true
+                    }
+
+                    else {
+                        bright.x = main.width + bright.width
+                    }
+                }
+
+                Behavior on x {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutQuad
+                    }
+                }
+
+                Connections {
+                    target: root
+
+                    function onCurrSelectedChanged() {
+                        currSelected === bright ? bright.selected = true : bright.selected = false
+                    }
+                }
+            }
+
+            Cal {
+                id: calendarus
+                visible: false
+                x: visible ? 0 : -main.width - calendarus.width
+                property bool selected: false
+
+                onXChanged: {
+                    if(x >= main.width + calendarus.width) {
+                        visible = false
+                    }
+                }
+
+                onSelectedChanged: {
+                    if(selected) {
+                        visible = true
+                    }
+
+                    else {
+                        calendarus.x = main.width + calendarus.width
+                    }
+                }
+
+                Behavior on x {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutQuad
+                    }
+                }
+                
+
+                Connections {
+                    target: root
+
+                    function onCurrSelectedChanged() {
+                        currSelected === calendarus ? calendarus.selected = true : calendarus.selected = false
+                    }
+                }
             }
         }
 
@@ -179,8 +246,25 @@ PopupWindow {
                 { button: "internet", value: 0.4, icon: "󰖩" },
                 { button: "brightness", value: Display.brightness, icon: "󰃠" },
                 { button: "bluetooth", value: 0, icon: ""},
-                { button: "system", value: 1, icon: "" }
+                { button: "calendar", value: 1, icon: "" }
             ]
+
+            signal currWidget(string val)
+
+            Connections {
+                target: controls
+                function onCurrWidget(val) {
+                    switch(val) {
+                        case "brightness":
+                            currSelected = bright
+                            break
+                                        
+                        case "calendar":
+                            currSelected = calendarus
+                            break
+                    }
+                }
+            }
 
             ColumnLayout {
                 anchors.fill: parent
@@ -195,6 +279,7 @@ PopupWindow {
 
                         progress: modelData.value
                         icon: modelData.icon
+                        button: modelData.button
                     }
                 }
             }

@@ -36,6 +36,10 @@ Item {
         Display.nightTemperature = Number(values.nTemp)
         Display.night = values.isNightMode
         autoNight.checked = values.autoNChecked
+
+        if(currTime != "night" && autoNight.checked == true) {
+            Display.night = false
+        }
     }
 
     ColumnLayout {
@@ -148,12 +152,6 @@ Item {
                 checked: false
                 implicitWidth: 26
                 implicitHeight: 26
-
-                onCheckedChanged: {
-                    if(!checked) {
-                        onNight.checked = false
-                    }
-                }
 
                 indicator: Rectangle {
                     implicitWidth: parent.width
