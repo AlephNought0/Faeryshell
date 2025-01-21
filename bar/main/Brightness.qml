@@ -29,8 +29,7 @@ Item {
 
     Component.onCompleted: {
         tempInput.text = values.nTemp
-        Display.nightTemperature = Number(values.nTemp)
-        Display.night = values.isNightMode
+        Display.nightTemperature = parseInt(values.nTemp)
         autoNight.checked = values.autoNChecked
 
         checkMode()
@@ -40,7 +39,6 @@ Item {
         id: values
 
         property string nTemp: "3500"
-        property bool isNightMode: Display.night
         property bool autoNChecked: autoNight.checked
     }
 

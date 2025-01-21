@@ -5,11 +5,18 @@ import Qt.labs.folderlistmodel
 
 import ".."
 
-Item {
+Singleton {
     id: root
 
     property string image: ""
     property string currentTime: Weather.currentTime
+    property int minutes: parseInt(Cfg.time.minutes)
+
+    onMinutesChanged: {
+        if(minutes % 4 === 0) {
+            getWallpaper()
+        }
+    }
 
     Component.onCompleted: {
         Weather.init.connect(getWallpaper)
@@ -30,16 +37,6 @@ Item {
                 
                 root.image = item
                 wallpaper.running = true
-            }
-        }
-    }
-
-    SystemClock {
-        id: clock
-
-        onMinutesChanged: {
-            if(minutes % 4 == 0) {
-                getWallpaper()
             }
         }
     }

@@ -7,6 +7,7 @@ import "../../"
 import ".."
 
 Item {
+    id: root
     width: 380
     height: 500
 
@@ -51,27 +52,97 @@ Item {
     property string hours: Cfg.time.hours.padStart(2, '0')
     property var monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-    ColumnLayout {
+    Item {
+        height: 25
         width: parent.width
-        anchors.centerIn: parent
-        spacing: 25
-
-        Item {
-            height: 25
-            width: parent.width
-            Layout.alignment: Qt.AlignTop
-
-            Text {
-                text: `${hours} : ${minutes} : ${seconds}`
-                x: (parent.width / 2) - (width / 2)
-                y: (parent.height / 2 - height / 2)
-                font.pixelSize: 38
-                font.family: Cfg.font
-                font.bold: true
-                color: "white"
-            }
+        anchors {
+            bottom: calendar.top
+            bottomMargin: 30
         }
 
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            propagateComposedEvents: true
+
+            onEntered: {
+                layout.x = 20
+                timeText.x = 100
+            }
+
+            onExited: {
+                layout.x = -layout.width
+                timeText.x = parent.width / 2 - timeText.width / 2
+            }
+
+            RowLayout {
+                id: layout
+                spacing: 10
+                x: -width
+                anchors.verticalCenter: parent.verticalCenter
+
+                Behavior on x {
+                    NumberAnimation {
+                        duration: 190
+                        easing.type: Easing.OutQuad
+                    }
+                }
+
+                Text {
+                    text: "󰸗"
+                    font.pixelSize: 24
+                    font.family: Cfg.font
+                    font.bold: true
+                    color: "white"
+
+                    ClickableIcon {
+                        propagateComposedEvents: true
+                        icon: parent
+                    }
+                }
+
+                Text {
+                    text: ""
+                    font.pixelSize: 24
+
+                    font.family: Cfg.font
+                    font.bold: true
+                    color: "white"
+
+                    ClickableIcon {
+                        propagateComposedEvents: true
+                        icon: parent
+                    }
+                }
+            }
+        } 
+
+        Text {
+            id: timeText
+            text: `${hours} : ${minutes} : ${seconds}`
+            x: parent.width / 2 - width / 2
+            y: parent.height / 2 - height / 2
+            font.pixelSize: 38
+            font.family: Cfg.font
+            font.bold: true
+            color: "white"
+
+            Behavior on x {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutQuad
+                }
+            }
+        }
+    }    
+
+    ColumnLayout {
+        id: calendar
+        width: parent.width
+        y: (root.height / 2 - height / 2) + 20
+        anchors.horizontalCenter: parent.horizontalCenter 
+        spacing: 25
+ 
         RowLayout {
             spacing: 100
             Layout.alignment: Qt.AlignHCenter
@@ -80,7 +151,6 @@ Item {
                 spacing: 20
 
                 Text {
-                    id: leftMonth
                     text: ""
                     font.pixelSize: 16
                     font.family: Cfg.font
@@ -88,7 +158,7 @@ Item {
                     color: "white"
 
                     ClickableIcon {
-                        icon: leftMonth
+                        icon: parent
 
                         onClicked: {
                             if(month === 0) {
@@ -117,7 +187,6 @@ Item {
                 }
 
                 Text {
-                    id: rightMonth
                     text: ""
                     font.pixelSize: 16
                     font.family: Cfg.font
@@ -125,7 +194,7 @@ Item {
                     color: "white"
 
                     ClickableIcon {
-                        icon: rightMonth
+                        icon: parent
 
                         onClicked: {
                             if(month === 11) {
@@ -144,7 +213,6 @@ Item {
                 spacing: 20
 
                 Text {
-                    id: leftYear
                     text: ""
                     font.pixelSize: 16
                     font.family: Cfg.font
@@ -152,7 +220,7 @@ Item {
                     color: "white"
 
                     ClickableIcon {
-                        icon: leftYear
+                        icon: parent
 
                         onClicked: {
                             year--
@@ -175,7 +243,6 @@ Item {
                 }
 
                 Text {
-                    id: rightYear
                     text: ""
                     font.pixelSize: 16
                     font.family: Cfg.font
@@ -183,7 +250,7 @@ Item {
                     color: "white"
 
                     ClickableIcon {
-                        icon: rightYear
+                        icon: parent
 
                         onClicked: {
                             year++

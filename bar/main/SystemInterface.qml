@@ -27,6 +27,7 @@ PopupWindow {
     onTargetVisibleChanged: {
         if(targetVisible) {
             visible = true
+            systemInterface.opacity = 1
             grab.active = true
             systemInterface.x = 0
         }
@@ -246,7 +247,7 @@ PopupWindow {
                 { button: "internet", value: 0.4, icon: "󰖩" },
                 { button: "brightness", value: Display.brightness, icon: "󰃠" },
                 { button: "bluetooth", value: 0, icon: ""},
-                { button: "calendar", value: 1, icon: "" }
+                { button: "calendar", value: 1, icon: "󰸗" }
             ]
 
             signal currWidget(string val)
@@ -301,8 +302,9 @@ PopupWindow {
         onOpacityChanged: {
             if(opacity == 0) {
                 grab.active = false
-                sysPopup.active = false
-                sysPopup.loading = true
+                x = root.width + width
+                root.visible = false
+                root.targetVisible = false
             }
         }
     }

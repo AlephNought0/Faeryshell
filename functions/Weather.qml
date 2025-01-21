@@ -9,7 +9,7 @@ import ".."
 Singleton {
     property string icon
     property string temp
-    property string weather
+    property string weather: " "
     property string currentTime
     property string min: Cfg.time.minutes
     property bool isRaining: false

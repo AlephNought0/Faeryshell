@@ -7,8 +7,8 @@ import Quickshell.Services.Mpris
 Singleton {
     id: root
 
-    property string mediaTitle: trackedPlayer?.metadata["xesam:title"] ?? ""
-    property string artist: String(trackedPlayer?.metadata["xesam:artist"] ?? "")
+    property string mediaTitle: trackedPlayer?.metadata["xesam:title"] ?? " "
+    property string artist: String(trackedPlayer?.metadata["xesam:artist"] ?? " ")
     property string albumImage: trackedPlayer?.metadata["mpris:artUrl"] ?? ""
     property string mediaLength
     property string mediaPosition
