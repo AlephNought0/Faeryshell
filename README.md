@@ -1,5 +1,9 @@
 This is my personal quickshell configuration. More explanations and intentions will be written as this configuration comes close to an end.
 
+> [!Important]
+> Currently this configuration requires matugen and SWWW to properly run.
+> SWWW is planned to be replaced with native implementation of wallpaper engine but I have no idea if I can do the same with matugen.
+
 # Wallpapers
 
 This quickshell configuration uses SWWW to change the wallpaper every 4 minutes. 
