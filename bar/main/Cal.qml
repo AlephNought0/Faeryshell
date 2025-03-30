@@ -16,36 +16,38 @@ Item {
     }
 
     function generateMonthGrid(year, month) {
-        let grid = []
-        let firstDayOfMonth = new Date(year, month, 1).getDay()
-        let daysPrevMonth = daysInMonth(year, month)
-        let daysCurrentMonth = daysInMonth(year, month)
-        let dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        const jsMonth = month - 1;
+        const firstDay = new Date(year, jsMonth, 1).getDay(); 
+        const daysInCurrent = new Date(year, month, 0).getDate();
+        const daysInPrevious = new Date(year, jsMonth, 0).getDate();
 
-        for(let i = 0; i < 7; i++) {
-            grid.push({name: dayNames[i], isDayName: true})
+        let grid = [];
+
+        ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach(name => {
+            grid.push({ name, isDayName: true });
+        });
+
+        const prevDaysToShow = firstDay; 
+
+        for (let i = prevDaysToShow; i > 0; i--) {
+            grid.push({ day: daysInPrevious - i + 1, isCurrentMonth: false });
         }
 
-        for(let i = firstDayOfMonth - 1; i >= 0; i--) {
-            grid.push({ day: daysPrevMonth - i, isCurrentMonth: false, isDayName: false})
+        for (let i = 1; i <= daysInCurrent; i++) {
+            grid.push({ day: i, isCurrentMonth: true });
         }
 
-        for(let i = 1; i <= daysCurrentMonth; i++) {
-            grid.push({ day: i, isCurrentMonth: true, isDayName: false});
+        const remainingCells = 42 - (grid.length - 7);
+
+        for (let i = 1; i <= remainingCells; i++) {
+            grid.push({ day: i, isCurrentMonth: false });
         }
 
-        let totalCells = (grid.length <= 35 ? 35 : 42)
-        let remainingDays = totalCells - grid.length
-
-        for(let i = 1; i <= remainingDays; i++) {
-            grid.push({ day: i, isCurrentMonth: false, isDayName: false})
-        }
-
-        return grid
+        return grid;
     }
 
     property int year: Cfg.time.year
-    property int month: Cfg.time.month
+    property int month: Cfg.time.month 
     property int currDay: Cfg.time.day
     property string seconds: Cfg.time.seconds.padStart(2, '0')
     property string minutes: Cfg.time.minutes.padStart(2, '0')
@@ -139,7 +141,7 @@ Item {
     ColumnLayout {
         id: calendar
         width: parent.width
-        y: (root.height / 2 - height / 2) + 20
+        y: (root.height / 2 - 370 / 2) + 20
         anchors.horizontalCenter: parent.horizontalCenter 
         spacing: 25
  
@@ -161,8 +163,8 @@ Item {
                         icon: parent
 
                         onClicked: {
-                            if(month === 0) {
-                                month = 11
+                            if(month === 1) {
+                                month = 12
                             }
 
                             else {
@@ -177,7 +179,7 @@ Item {
                     height: 10
 
                     Text {
-                        text: monthNames[month]
+                        text: monthNames[month - 1]
                         anchors.centerIn: parent
                         font.pixelSize: 16
                         font.family: Cfg.font
@@ -197,8 +199,8 @@ Item {
                         icon: parent
 
                         onClicked: {
-                            if(month === 11) {
-                                month = 0
+                            if(month === 12) {
+                                month = 1
                             }
 
                             else {

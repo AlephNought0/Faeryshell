@@ -30,7 +30,7 @@ Singleton {
         property string minutes: clock.minutes
         property string seconds: clock.seconds
         property string day: new Date().getDate()
-        property string month: new Date().getMonth()
+        property string month: new Date().getMonth() + 1
         property string year: new Date().getFullYear()
     }
 

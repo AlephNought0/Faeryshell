@@ -14,7 +14,7 @@ RowLayout {
     property string hour: Cfg.time.hours.padStart(2, '0')
     property string minute: Cfg.time.minutes.padStart(2, '0')
     property string year: Cfg.time.year
-    property string month: (Cfg.time.month + 1).padStart(2, '0')
+    property string month: (Cfg.time.month).padStart(2, '0')
     property string day: Cfg.time.day.padStart(2, '0')
 
     Rectangle { //Audio

@@ -5,7 +5,7 @@ import Qt.labs.folderlistmodel
 
 import ".."
 
-Singleton {
+Item {
     id: root
 
     property string image: ""
