@@ -153,86 +153,47 @@ PopupWindow {
         Rectangle {
             id: main
             radius: 15
-            Layout.preferredHeight: childrenRect.height
+            Layout.preferredHeight: 500 
             Layout.preferredWidth: 380
             color: Cfg.colors.primaryFixedDim
             clip: true
 
-            Brightness {
-                id: bright
-                visible: true
-                x: visible ? 0 : -main.width - bright.width
-                property bool selected: true
+            StackView {
+                id: stack
+                initialItem: bright
+                anchors.fill: parent
 
-                onXChanged: {
-                    if(x >= main.width + bright.width) {
-                        visible = false
-                    }
-                }
-
-                onSelectedChanged: {
-                    if(selected) {
-                        visible = true
-                    }
-
-                    else {
-                        bright.x = main.width + bright.width
-                    }
-                }
-
-                Behavior on x {
-                    NumberAnimation {
+                replaceEnter: Transition {
+                    PropertyAnimation {
+                        property: "x"
+                        from: -stack.width * 1.5
+                        to: 0
                         duration: 300
                         easing.type: Easing.OutQuad
                     }
                 }
 
-                Connections {
-                    target: root
-
-                    function onCurrSelectedChanged() {
-                        currSelected === bright ? bright.selected = true : bright.selected = false
+                replaceExit: Transition {
+                    PropertyAnimation {
+                        property: "x"
+                        from: 0
+                        to: stack.width * 1.5
+                        duration: 300
+                        easing.type: Easing.OutQuad
                     }
                 }
             }
 
-            Cal {
+            Component {
+                id: bright
+
+                Brightness {}
+            }
+
+            Component {
                 id: calendarus
-                visible: false
-                x: visible ? 0 : -main.width - calendarus.width
-                property bool selected: false
 
-                onXChanged: {
-                    if(x >= main.width + calendarus.width) {
-                        visible = false
-                    }
-                }
-
-                onSelectedChanged: {
-                    if(selected) {
-                        visible = true
-                    }
-
-                    else {
-                        calendarus.x = main.width + calendarus.width
-                    }
-                }
-
-                Behavior on x {
-                    NumberAnimation {
-                        duration: 300
-                        easing.type: Easing.OutQuad
-                    }
-                }
-                
-
-                Connections {
-                    target: root
-
-                    function onCurrSelectedChanged() {
-                        currSelected === calendarus ? calendarus.selected = true : calendarus.selected = false
-                    }
-                }
+                Cal {}
             }
         }
 
@@ -243,11 +204,14 @@ PopupWindow {
             Layout.preferredWidth: 150
             color: Cfg.colors.primaryFixedDim
 
+            property int dayValue: new Date(parseInt(Cfg.time.year), parseInt(Cfg.time.month), 0).getDate()
+            property string currItem
+
             property var buttons: [
                 { button: "internet", value: 0.4, icon: "󰖩" },
                 { button: "brightness", value: Display.brightness, icon: "󰃠" },
                 { button: "bluetooth", value: 0, icon: ""},
-                { button: "calendar", value: 1, icon: "󰸗" }
+                { button: "calendar", value: parseInt(Cfg.time.day) / dayValue, icon: "󰸗" }
             ]
 
             signal currWidget(string val)
@@ -255,14 +219,18 @@ PopupWindow {
             Connections {
                 target: controls
                 function onCurrWidget(val) {
-                    switch(val) {
-                        case "brightness":
-                            currSelected = bright
-                            break
-                                        
-                        case "calendar":
-                            currSelected = calendarus
-                            break
+                    if(val === controls.currItem) {
+                        return
+                    }
+
+                    else if(val === "brightness") {
+                        stack.replaceCurrentItem(bright)
+                        controls.currItem = val
+                    }
+
+                    else if(val === "calendar") {
+                        stack.replaceCurrentItem(calendarus)
+                        controls.currItem = val
                     }
                 }
             }

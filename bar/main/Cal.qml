@@ -25,22 +25,28 @@ Item {
 
         ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach(name => {
             grid.push({ name, isDayName: true });
-        });
+        })
 
-        const prevDaysToShow = firstDay; 
+        const prevDaysToShow = firstDay
 
         for (let i = prevDaysToShow; i > 0; i--) {
-            grid.push({ day: daysInPrevious - i + 1, isCurrentMonth: false });
+            grid.push({ day: daysInPrevious - i + 1, isMain: false, isCurrentMonth: false })
         }
 
         for (let i = 1; i <= daysInCurrent; i++) {
-            grid.push({ day: i, isCurrentMonth: true });
+            if(month === parseInt(Cfg.time.month)) {
+                grid.push({ day: i, isMain: true, isCurrentMonth: true })
+            }
+
+            else {
+                grid.push({ day: i, isMain: true, isCurrentMonth: false })
+            }
         }
 
-        const remainingCells = 42 - (grid.length - 7);
+        const remainingCells = 42 - (grid.length - 7)
 
         for (let i = 1; i <= remainingCells; i++) {
-            grid.push({ day: i, isCurrentMonth: false });
+            grid.push({ day: i, isMain: false, isCurrentMonth: false })
         }
 
         return grid;
@@ -82,6 +88,7 @@ Item {
                 spacing: 10
                 x: -width
                 anchors.verticalCenter: parent.verticalCenter
+                visible: x === -width ? false : true
 
                 Behavior on x {
                     NumberAnimation {
@@ -267,14 +274,14 @@ Item {
             Layout.alignment: Qt.AlignCenter
             interactive: false
             width: parent.width - 10
-            height: childrenRect.height
+            height: childrenRect.height + 10
             cellWidth: width / 7
             cellHeight: width / 7
             model: generateMonthGrid(year, month)
             delegate: Rectangle {
                 width: monthGrid.cellWidth - 7
                 height: monthGrid.cellHeight - 7
-                color: currDay === modelData.day && month === parseInt(Cfg.time.month) && year === parseInt(Cfg.time.year) ? Cfg.colors.thirdaryColor : "transparent"
+                color: currDay === modelData.day && modelData.isCurrentMonth && year === parseInt(Cfg.time.year) ? Cfg.colors.thirdaryColor : "transparent"
                 radius: 30
 
                 MouseArea {
@@ -287,7 +294,7 @@ Item {
                     }
 
                     onExited: {
-                        parent.color = currDay === modelData.day && month === parseInt(Cfg.time.month) && year === parseInt(Cfg.time.year) ? Cfg.colors.thirdaryColor : "transparent"
+                        parent.color = currDay === modelData.day && modelData.isCurrentMonth && year === parseInt(Cfg.time.year) ? Cfg.colors.thirdaryColor : "transparent"
                     }
                 }
 
@@ -297,7 +304,7 @@ Item {
                     font.pixelSize: 16
                     font.family: Cfg.font
                     font.bold: true
-                    color: modelData.isCurrentMonth || modelData.isDayName ? "white" : "#575757"
+                    color: modelData.isMain || modelData.isDayName ? "white" : "#575757"
                 }
             }
         } 
