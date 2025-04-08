@@ -24,18 +24,13 @@ Singleton {
         property int nightTemp: tempNightVal
     }
 
-
-    Timer {
-        interval: 200
-        running: true
-        repeat: false
-
-        onTriggered: {
-            if(autoNightMode && isNight) {
-                changeTemp.running = true;
-                setNight = true;
-            }
+    function autoNight() {
+        if(autoNightMode && isNight) {
+            changeTemp.running = true;
+            setNight = true;
         }
+
+        Weather.init.disconnect(autoNight)
     }
 
     Component.onCompleted: {
@@ -43,6 +38,8 @@ Singleton {
         nightTemperature = values.nightTemp;
         tempNightVal = values.nightTemp;
         setNight = values.autoSetNight
+
+        Weather.init.connect(autoNight)
     }
 
     onTempNightValChanged: {
