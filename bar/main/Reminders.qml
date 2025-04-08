@@ -1,5 +1,11 @@
 import QtQuick
 
-Text {
-    text: "funneh test"
+Item {
+    width: 380
+    height: stack.height
+
+    Text {
+        anchors.centerIn: parent
+        text: "huge fart"
+    }
 }

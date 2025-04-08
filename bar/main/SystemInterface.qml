@@ -205,7 +205,7 @@ PopupWindow {
             color: Cfg.colors.primaryFixedDim
 
             property int dayValue: new Date(parseInt(Cfg.time.year), parseInt(Cfg.time.month), 0).getDate()
-            property string currItem
+            property string currItem: "brightness"
 
             property var buttons: [
                 { button: "internet", value: 0.4, icon: "󰖩" },

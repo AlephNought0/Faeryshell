@@ -68,7 +68,7 @@ Singleton {
                     name = "day";
                 }
 
-                else if(currTime >= evening && currTime <= night) {
+                else if(currTime >= evening && currTime <= sunset) {
                     Cfg.time.part = "evening";
                     name = "evening";
                 }
