@@ -85,7 +85,7 @@ PopupWindow {
                         }
 
                         Text {
-                            text: Weather.temp
+                            text: `${Weather.temp}°C`
                             font.family: Cfg.font
                             font.pixelSize: 16
                             color: "white"
@@ -270,9 +270,8 @@ PopupWindow {
         onOpacityChanged: {
             if(opacity == 0) {
                 grab.active = false
-                x = root.width + width
-                root.visible = false
-                root.targetVisible = false
+                sysPopup.active = false
+                sysPopup.loading = true
             }
         }
     }

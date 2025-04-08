@@ -9,9 +9,10 @@ import ".."
 Singleton {
     property string icon
     property string temp
+    property string latitude
+    property string longitude
+    property int min: parseInt(Cfg.time.minutes)
     property string weather: " "
-    property string currentTime
-    property string min: Cfg.time.minutes
     property bool isRaining: false
     property bool isSnowing: false
     property bool isFoggy: false
@@ -20,211 +21,203 @@ Singleton {
     signal init()
 
     onMinChanged: {
-        weath.running = true
-    }
-
-    Timer {
-        id: delay
-        running: false
-        repeat: false
-        interval: 200
-
-        onTriggered: {
-            weath.running = true
+        if(min % 2) {
+            location.running = true;
         }
     }
 
-    Process { //Weather
-        id: weath
-        command: ["curl", `wttr.in/?format=j2`]
-        running: false
-
+    Process {
+        id: location
+        command: ["curl", "ipinfo.io"]
+        running: true
         stdout: SplitParser {
             splitMarker: ""
             onRead: data => {
-                var json = JSON.parse(data)
-                var name = ""
-
-                temp = json.current_condition[0].temp_C + "°C"
-                weather = json.current_condition[0].weatherDesc[0].value
-
-                if(currentTime === "day" || currentTime === "evening") {
-                    name = "sunny"
-                }
-
-                else {
-                    name = "night"
-                }
-
-                switch(weather) { //https://github.com/chubin/wttr.in/blob/235581925fa2e09a42e9631e2c23294a1972ee0e/share/translations/mk.txt 386
-                    case "Clear":
-                    case "Sunny":
-                        if(currentTime == "night") { name = "night" }
-                        icon = `../../icons/${name}.svg`
-                        break
-
-                    case "Partly cloudy":
-                        icon = `../../icons/${name}_cloudy.svg`
-                        break
-
-                    case "Thundery outbreaks in nearby":
-                    case "Thundery outbreaks possible":
-                        icon = `../../icons/thunder.svg`
-                        break
-
-                    case "Overcast":
-                    case "Cloudy":
-                        icon = "../../icons/cloudy.svg"
-                        break
-
-                    case "Mist":
-                    case "Fog":
-                    case "Freezing fog":
-                        icon = "../../icons/mist.svg"
-                        isSleet = false
-                        isSnowing = false
-                        isRaining = false
-                        isFoggy = true
-                        break
-
-                    case "Blowing snow":
-                    case "Blizzard":
-                        icon = "../../icons/blowing_snow.svg"
-                        isSleet = false
-                        isRaining = false
-                        isFoggy = false
-                        isSnowing = true
-                        break
-
-                    case "Patchy light drizzle":
-                    case "Light drizzle":
-                    case "Patchy rain nearby":
-                    case "Patchy rain possible":
-                    case "Light drizzle and rain":
-                        icon = `../../icons/${name}_patchy_rain.svg`
-                        isSleet = false
-                        isFoggy = false
-                        isSnowing = false
-                        isRaining = true
-                        break
-                    
-                    case "Freezing drizzle":
-                    case "Heavy freezing drizzle":
-                    case "Light freezing rain":
-                    case "Light freezing rain, mist":
-                    case "Moderate or heavy freezing rain":
-                    case "Light sleet":
-                    case "Moderate or heavy sleet":
-                    case "Patchy sleet possible":
-                    case "Patchy freezing drizzle possible":
-                    case "Light sleet showers":
-                    case "Moderate or heavy sleet showers":
-                        icon = "../../icons/sleet.svg"
-                        isFoggy = false
-                        isSnowing = false
-                        isRaining = false
-                        isSleet = true
-                        break
-
-                    case "Rain, light rain":
-                        icon = `../../icons/${name}_light_raining.svg`
-                        weather = "Rain"
-                        isSleet = false
-                        isFoggy = false
-                        isSnowing = false
-                        isRaining = true
-                        break
-
-                    case "Patchy light rain":
-                    case "Light rain":
-                    case "Moderate rain at times":
-                    case "Moderate rain":
-                    case "Light rain shower":
-                        icon = `../../icons/${name}_light_raining.svg`
-                        isSleet = false
-                        isFoggy = false
-                        isSnowing = false
-                        isRaining = true
-                        break
-
-                    case "Heavy rain at times":
-                    case "Heavy rain":
-                    case "Moderate or heavy rain shower":
-                        icon = "../../icons/heavy_raining.svg"
-                        isSleet = false
-                        isFoggy = false
-                        isSnowing = false
-                        isRaining = true
-                        break
-        
-                    case "Patchy light snow":
-                    case "Light snow":
-                    case "Patchy moderate snow":
-                    case "Moderate snow":
-                    case "Patchy snow possible":
-                    case "Light snow showers":
-                        icon = `../../icons/${name}_snowing.svg`
-                        isSleet = false
-                        isFoggy = false
-                        isRaining = false
-                        isSnowing = true
-                        break
-
-                    case "Patchy heavy snow":
-                    case "Heavy snow":
-                    case "Ice pellets": //Idk what to give u
-                    case "Moderate or heavy snow showers":
-                        icon = "../../icons/snowing.svg"
-                        isSleet = false
-                        isFoggy = false
-                        isRaining = false
-                        isSnowing = true
-                        break
-
-                    case "Torrential rain shower":
-                        icon = "../../icons/extreme_rain.svg"
-                        isSleet = false
-                        isFoggy = false
-                        isSnowing = false
-                        isRaining = true
-                        break
-                }
-
-                init()
+                var json = JSON.parse(data);
+                var location = json.loc.split(",");
+                latitude = location[0];
+                longitude = location[1];
+                weath.running = true;
             }
         }
     }
 
-    Process { //Time
-        id: cycleTime
-        command: ["curl", `wttr.in/?format=%S|%s|%d`]
-        running: true
-
+    Process {
+        id: weath
+        command: ["curl", `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=sunset,sunrise&current=temperature_2m,is_day,weather_code&timezone=auto`]
+        running: false
         stdout: SplitParser {
             splitMarker: ""
             onRead: data => {
-                var times = data.split("|")
-                var a = times[0].split(":")
-                var b = times[1].split(":")
-                var c = times[2].split(":")
-                var day = parseInt(a[0]) * 60 + parseInt(a[1])
-                var evening = parseInt(b[0]) * 60 + parseInt(b[1])
-                var night = parseInt(c[0]) * 60 + parseInt(c[1])
-                var currTime = parseInt(Cfg.time.hours) * 60 + parseInt(Cfg.time.minutes)
-
-                if(currTime >= day && currTime < evening) {
-                    currentTime = "day"
+                var json = JSON.parse(data);
+                var weatherCode = json.current.weather_code;
+                var sunrise = new Date(json.daily.sunrise[0]);
+                var sunset = new Date(json.daily.sunset[0]);
+                var evening = new Date(sunset.getTime() - 3600000);
+                var currTime = new Date();
+                var name = "";
+                temp = json.current.temperature_2m;
+                Cfg.time.isDay = json.current.is_day;
+                isSleet = false;
+                isFoggy = false;
+                isSnowing = false;
+                isRaining = false;
+    
+                if(currTime >= sunrise && currTime <= evening) {
+                    Cfg.time.part = "day";
+                    name = "day";
                 }
 
-                else if(currTime >= evening && currTime < night) {
-                    currentTime = "evening"
+                else if(currTime >= evening && currTime <= night) {
+                    Cfg.time.part = "evening";
+                    name = "evening";
                 }
 
                 else {
-                    currentTime = "night"
+                    Cfg.time.part = "night";
+                    name = "night";
                 }
 
-                delay.running = true
+                switch(weatherCode) { //https://weather-sense.leftium.com/wmo-codes
+                    case 0:
+                    case 1:
+                        icon = `../../icons/${name}.svg`;
+                        weather = "Clear";
+                        break;
+
+                    case 2:
+                        icon = `../../icons/${name}_cloudy.svg`;
+                        weather = "Partly cloudy";
+                        break;
+
+                    case 3:
+                        icon = `../../icons/cloudy.svg`;
+                        weather = "Overcast";
+                        break;
+
+                    case 45:
+                    case 48:
+                        icon = `../../icons/misty.svg`;
+                        weather = "Foggy";
+                        isFoggy = true;
+                        break;
+
+                    case 51:
+                        icon = `../../icons/${name}_light_raining.svg`;
+                        weather = "Light drizzle";
+                        isRaining = true;
+                        break;
+
+                    case 53:
+                        icon = `../../icons/${name}_raining.svg`;
+                        weather = "Drizzle";
+                        isRaining = true;
+                        break;
+
+                    case 55:
+                        icon = `../../icons/heavy_raining.svg`;
+                        weather = "Heavy drizzle";
+                        isRaining = true;
+                        break;
+
+                    case 56:
+                        icon = `../../icons/sleet.svg`; //Will find something better for it
+                        weather = "Light icy drizzle";
+                        isSleet = true;
+                        break;
+
+                    case 57:
+                        icon = `../../icons/sleet.svg`; //Will find something better for it
+                        weather = "Icy drizzle";
+                        isSleet = true;
+                        break;
+
+                    case 66:
+                        icon = `../../icons/sleet.svg`; //Yeah something better too
+                        weather = "Light icy rain";
+                        isSleet = true;
+                        break;
+
+                    case 67:
+                        icon = `../../icons/sleet.svg`; //You guessed it
+                        weather = "Icy rain";
+                        isSleet = true;
+                        break;
+
+                    case 71:
+                        icon = `../../icons/${name}_snowing.svg`;
+                        weather = "Light snow";
+                        isSnowing = true;
+                        break;
+
+                    case 73:
+                        icon = `../../icons/${name}_snowing.svg`;
+                        weather = "Snow";
+                        isSnowing = true;
+                        break;
+
+                    case 75:
+                        icon = `../../icons/snowing.svg`;
+                        weather = "Heavy snow";
+                        isSnowing = true;
+                        break;
+
+                    case 77:
+                        icon = `../../icons/snowing.svg`; //Yeah this one will also get a better icon
+                        weather = "Snow grains";
+                        isSnowing = true;
+                        break;
+
+                    case 80:
+                        icon = `../../icons/${name}_light_raining.svg`;
+                        weather = "Light showers";
+                        isRaining = true;
+                        break;
+
+                    case 81:
+                        icon = `../../icons/${name}_light_raining.svg`;
+                        weather = "Showers";
+                        isRaining = true;
+                        break;
+
+                    case 82:
+                        icon = `../../icons/heavy_raining.svg`;
+                        weather = "Heavy showers";
+                        isRaining = true;
+                        break;
+
+                    case 85:
+                        icon = `../../icons/${name}_light_snowing.svg`;
+                        weather = "Light snow showers";
+                        isSnowing = true;
+                        break;
+
+                    case 86:
+                        icon = `../../icons/snowing.svg`;
+                        weather = "Snow showers";
+                        isSnowing = true;
+                        break;
+
+                    case 95:
+                        icon = `../../icons/thunder.svg`;
+                        weather = "Thunder storm";
+                        isRaining = true;
+                        break;
+
+                    case 96:
+                        icon = `../../icons/thunder.svg`; //Will get something better for it
+                        weather = "Thunder storm + light hail";
+                        isRaining = true;
+                        break;
+
+                    case 99:
+                        icon = `../../icons/thunder.svg`; //Same
+                        weather = "Thunder storm + heavy hail";
+                        isRaining = true;
+                        break;
+                }
+
+                init();
             }
         }
     }

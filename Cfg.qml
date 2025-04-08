@@ -32,6 +32,8 @@ Singleton {
         property string day: new Date().getDate()
         property string month: new Date().getMonth() + 1
         property string year: new Date().getFullYear()
+        property string part
+        property bool isDay: false
     }
 
     colors: QtObject {

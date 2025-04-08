@@ -9,7 +9,7 @@ Item {
     id: root
 
     property string image: ""
-    property string currentTime: Weather.currentTime
+    property string currentTime: Cfg.time.part 
     property int minutes: parseInt(Cfg.time.minutes)
 
     onMinutesChanged: {

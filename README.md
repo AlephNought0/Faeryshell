@@ -1,5 +1,10 @@
 This is my personal quickshell configuration. More explanations and intentions will be written as this configuration comes close to an end.
 
+> [!Warning]
+> This configuration uses a patched version of quickshell. On top of that this configuration is not yet finished.
+> If despite that you still wish to use this configuration then check my Faery repository for the .patch file.
+> It is located in /systems/cirno/packages directory.
+
 > [!Important]
 > Currently this configuration requires matugen and SWWW to properly run.
 > SWWW is planned to be replaced with native implementation of wallpaper engine but I have no idea if I can do the same with matugen.

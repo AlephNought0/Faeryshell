@@ -27,26 +27,26 @@ Item {
             grid.push({ name, isDayName: true });
         })
 
-        const prevDaysToShow = firstDay
+        const prevDaysToShow = firstDay;
 
         for (let i = prevDaysToShow; i > 0; i--) {
-            grid.push({ day: daysInPrevious - i + 1, isMain: false, isCurrentMonth: false })
+            grid.push({ day: daysInPrevious - i + 1, isMain: false, isCurrentMonth: false });
         }
 
         for (let i = 1; i <= daysInCurrent; i++) {
             if(month === parseInt(Cfg.time.month)) {
-                grid.push({ day: i, isMain: true, isCurrentMonth: true })
+                grid.push({ day: i, isMain: true, isCurrentMonth: true });
             }
 
             else {
-                grid.push({ day: i, isMain: true, isCurrentMonth: false })
+                grid.push({ day: i, isMain: true, isCurrentMonth: false });
             }
         }
 
-        const remainingCells = 42 - (grid.length - 7)
+        const remainingCells = 42 - (grid.length - 7);
 
         for (let i = 1; i <= remainingCells; i++) {
-            grid.push({ day: i, isMain: false, isCurrentMonth: false })
+            grid.push({ day: i, isMain: false, isCurrentMonth: false });
         }
 
         return grid;
@@ -61,16 +61,21 @@ Item {
     property var monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
     Item {
+        id: timeWidget
         height: 25
         width: parent.width
         anchors {
-            bottom: calendar.top
+            bottom: stack.top
             bottomMargin: 30
         }
 
+        property string currentItem: "calendar"
+
         MouseArea {
-            anchors.fill: parent
+            width: parent.width
+            height: parent.height + 20
             hoverEnabled: true
+            anchors.centerIn: parent
             propagateComposedEvents: true
 
             onEntered: {
@@ -107,6 +112,13 @@ Item {
                     ClickableIcon {
                         propagateComposedEvents: true
                         icon: parent
+
+                        onClicked: {
+                            if(timeWidget.currentItem !== "calendar") {
+                                stack.replaceCurrentItem(calendar)
+                                timeWidget.currentItem = "calendar"
+                            }
+                        }
                     }
                 }
 
@@ -121,6 +133,13 @@ Item {
                     ClickableIcon {
                         propagateComposedEvents: true
                         icon: parent
+
+                        onClicked: {
+                            if(timeWidget.currentItem !== "reminder") {
+                                stack.replaceCurrentItem(reminder)
+                                timeWidget.currentItem = "reminder"
+                            }
+                        }
                     }
                 }
             }
@@ -143,170 +162,45 @@ Item {
                 }
             }
         }
-    }    
+    }
 
-    ColumnLayout {
-        id: calendar
+    StackView {
+        id: stack
+        initialItem: calendar
         width: parent.width
-        y: (root.height / 2 - 370 / 2) + 20
         anchors.horizontalCenter: parent.horizontalCenter 
-        spacing: 25
- 
-        RowLayout {
-            spacing: 100
-            Layout.alignment: Qt.AlignHCenter
+        y: (root.height / 2 - 370 / 2) + 20
 
-            RowLayout {
-                spacing: 20
-
-                Text {
-                    text: ""
-                    font.pixelSize: 16
-                    font.family: Cfg.font
-                    font.bold: true
-                    color: "white"
-
-                    ClickableIcon {
-                        icon: parent
-
-                        onClicked: {
-                            if(month === 1) {
-                                month = 12
-                            }
-
-                            else {
-                                month--
-                            }
-                        }
-                    }
-                }
-
-                Item {
-                    width: 80
-                    height: 10
-
-                    Text {
-                        text: monthNames[month - 1]
-                        anchors.centerIn: parent
-                        font.pixelSize: 16
-                        font.family: Cfg.font
-                        font.bold: true
-                        color: "white"
-                    }
-                }
-
-                Text {
-                    text: ""
-                    font.pixelSize: 16
-                    font.family: Cfg.font
-                    font.bold: true
-                    color: "white"
-
-                    ClickableIcon {
-                        icon: parent
-
-                        onClicked: {
-                            if(month === 12) {
-                                month = 1
-                            }
-
-                            else {
-                                month++
-                            }
-                        }
-                    }
-                }
-            }
-
-            RowLayout {
-                spacing: 20
-
-                Text {
-                    text: ""
-                    font.pixelSize: 16
-                    font.family: Cfg.font
-                    font.bold: true
-                    color: "white"
-
-                    ClickableIcon {
-                        icon: parent
-
-                        onClicked: {
-                            year--
-                        }
-                    }
-                }
-
-                Item {
-                    width: 50
-                    height: 10
-
-                    Text {
-                        text: year
-                        anchors.centerIn: parent
-                        font.pixelSize: 16
-                        font.family: Cfg.font
-                        font.bold: true
-                        color: "white"
-                    }
-                }
-
-                Text {
-                    text: ""
-                    font.pixelSize: 16
-                    font.family: Cfg.font
-                    font.bold: true
-                    color: "white"
-
-                    ClickableIcon {
-                        icon: parent
-
-                        onClicked: {
-                            year++
-                        }
-                    }
-                }
+        replaceEnter: Transition {
+            PropertyAnimation {
+                property: "x"
+                from: -stack.width * 1.5
+                to: 0
+                duration: 300
+                easing.type: Easing.OutQuad
             }
         }
 
-        GridView {
-            id: monthGrid
-            Layout.alignment: Qt.AlignCenter
-            interactive: false
-            width: parent.width - 10
-            height: childrenRect.height + 10
-            cellWidth: width / 7
-            cellHeight: width / 7
-            model: generateMonthGrid(year, month)
-            delegate: Rectangle {
-                width: monthGrid.cellWidth - 7
-                height: monthGrid.cellHeight - 7
-                color: currDay === modelData.day && modelData.isCurrentMonth && year === parseInt(Cfg.time.year) ? Cfg.colors.thirdaryColor : "transparent"
-                radius: 30
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    enabled: modelData.isDayName ? false : true
-
-                    onEntered: {
-                        parent.color = Qt.alpha(Cfg.colors.thirdaryColor, 0.4)
-                    }
-
-                    onExited: {
-                        parent.color = currDay === modelData.day && modelData.isCurrentMonth && year === parseInt(Cfg.time.year) ? Cfg.colors.thirdaryColor : "transparent"
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: modelData.isDayName ? modelData.name : modelData.day
-                    font.pixelSize: 16
-                    font.family: Cfg.font
-                    font.bold: true
-                    color: modelData.isMain || modelData.isDayName ? "white" : "#575757"
-                }
+        replaceExit: Transition {
+            PropertyAnimation {
+                property: "x"
+                from: 0
+                to: stack.width * 1.5
+                duration: 300
+                easing.type: Easing.OutQuad
             }
-        } 
+        }
+        
+        Component {
+            id: calendar
+
+            CalendarWidget {}
+        }
+
+        Component {
+            id: reminder
+
+            Reminders {}
+        }
     }
 }

@@ -3,35 +3,58 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import QtCore
+
+import ".."
 
 Singleton {
     property real brightness
     property int temperature
     property int nightTemperature
-    property int nTempVal
-    property bool night
+    property int tempNightVal
+    property bool autoNightMode
+    property bool setNight
+    property bool isNight: !Cfg.time.isDay
 
-    onNightChanged: {
-        if(night) {
-            nTempVal = nightTemperature
-            changeTemp.running = true
-        }
+    Settings {
+        id: values
 
-        else {
-            nTempVal = 6500
-            changeTemp.running = true
+        property bool autoNight: autoNightMode
+        property int nightTemp: tempNightVal
+    }
+
+    Component.onCompleted: {
+        autoNightMode = values.autoNight;
+        nightTemperature = values.nightTemp;
+        tempNightVal = values.nightTemp;
+
+        if(autoNightMode && isNight) {
+            changeTemp.running = true;
+            setNight = true;
         }
     }
 
-    onNightTemperatureChanged: {
-        if(night) {
-            nTempVal = nightTemperature
-            changeTemp.running = true
+    onTempNightValChanged: {
+        if(setNight) {
+            nightTemperature = tempNightVal;
+            changeTemp.running = true;
+        }
+    }
+
+    onSetNightChanged: {
+        if(setNight) {
+            nightTemperature = values.nightTemp;
+            changeTemp.running = true;
+        }
+
+        else {
+            nightTemperature = 6500;
+            changeTemp.running = true;
         }
     }
 
     onBrightnessChanged: {
-        brightnessDelay.running = true
+        brightnessDelay.running = true;
     }
 
     Timer {
@@ -48,7 +71,7 @@ Singleton {
     Process {
         id: changeTemp
         running: false
-        command: ["sh", "-c", `busctl --user set-property rs.wl-gammarelay / rs.wl.gammarelay Temperature q ${nTempVal}`]
+        command: ["sh", "-c", `busctl --user set-property rs.wl-gammarelay / rs.wl.gammarelay Temperature q ${nightTemperature}`]
         
     }
 
@@ -66,10 +89,10 @@ Singleton {
         stdout: SplitParser {
             splitMarker: ""
             onRead: data => {
-                var val = data.split("\n")
-                var i = val[0].split(" ")
-                brightness = parseInt(i[0]) / 100
-                temperature = parseInt(i[1])
+                var val = data.split("\n");
+                var i = val[0].split(" ");
+                brightness = parseInt(i[0]) / 100;
+                temperature = parseInt(i[1]);
             }
         }
     }

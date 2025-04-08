@@ -11,35 +11,9 @@ Item {
     width: 380
     height: 500
 
-    property string currTime: Weather.currentTime
-
-    function checkMode() {
-        if(currTime === "night" && autoNight.checked == true) {
-            Display.night = true
-        }
-
-        else if(currTime != "night" && autoNight.checked == true) {
-            Display.night = false
-        }
-    }
-
-    onCurrTimeChanged: {
-        checkMode()
-    }
-
     Component.onCompleted: {
-        tempInput.text = values.nTemp
-        Display.nightTemperature = parseInt(values.nTemp)
-        autoNight.checked = values.autoNChecked
-
-        checkMode()
-    }
-
-    Settings {
-        id: values
-
-        property string nTemp: "3500"
-        property bool autoNChecked: autoNight.checked
+        tempInput.text = Display.tempNightVal;
+        autoNight.checked = Display.autoNightMode;
     }
 
     ColumnLayout {
@@ -138,8 +112,8 @@ Item {
                 }
 
                 Keys.onReturnPressed: {
-                    values.nTemp = text
-                    Display.nightTemperature = Number(text)
+                    Display.tempNightVal = parseInt(text)
+                    Display.nightTemperature = parseInt(text)
                 }
             }
         }
@@ -183,6 +157,7 @@ Item {
 
                     onClicked: {
                         autoNight.checked = !autoNight.checked
+                        Display.autoNightMode = autoNight.checked ? true : false
                     }
                 }
             }
@@ -192,14 +167,14 @@ Item {
             width: 250
             height: 50
             radius: 10
-            color: Display.night ? "grey" : "white"
+            color: Display.setNight ? "grey" : "white"
             Layout.alignment: Qt.AlignHCenter
 
             Text {
-                text: Display.night ? "" : ""
+                text: Display.setNight ? "" : ""
                 font.family: Cfg.font
                 font.pixelSize: 20
-                color: Display.night ? "white" : "black"
+                color: Display.setNight ? "white" : "black"
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.left
@@ -208,10 +183,10 @@ Item {
             }
 
             Text {
-                text: Display.night ? "Night mode" : "Day mode"
+                text: Display.setNight ? "Night mode" : "Day mode"
                 font.family: Cfg.font
                 font.pixelSize: 20
-                color: Display.night ? "white" : "black"
+                color: Display.setNight ? "white" : "black"
                 anchors.centerIn: parent
             }
 
@@ -224,11 +199,11 @@ Item {
                 }
 
                 onExited: {
-                    parent.color = Display.night ? "grey" : "white"
+                    parent.color = Display.setNight ? "grey" : "white"
                 }
 
                 onClicked: {
-                    Display.night = !Display.night
+                    Display.setNight = !Display.setNight
                 }
             }
         }
