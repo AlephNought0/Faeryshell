@@ -7,7 +7,7 @@ import "../../"
 import "../../functions"
 
 Item {
-    id: main
+    id: root
     width: 380
     height: 500
 

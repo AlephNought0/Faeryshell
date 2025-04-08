@@ -20,18 +20,29 @@ Singleton {
         id: values
 
         property bool autoNight: autoNightMode
+        property bool autoSetNight: setNight
         property int nightTemp: tempNightVal
+    }
+
+
+    Timer {
+        interval: 200
+        running: true
+        repeat: false
+
+        onTriggered: {
+            if(autoNightMode && isNight) {
+                changeTemp.running = true;
+                setNight = true;
+            }
+        }
     }
 
     Component.onCompleted: {
         autoNightMode = values.autoNight;
         nightTemperature = values.nightTemp;
         tempNightVal = values.nightTemp;
-
-        if(autoNightMode && isNight) {
-            changeTemp.running = true;
-            setNight = true;
-        }
+        setNight = values.autoSetNight
     }
 
     onTempNightValChanged: {
