@@ -14,13 +14,12 @@ Singleton {
     property int tempNightVal
     property bool autoNightMode
     property bool setNight
-    property bool isNight: !Cfg.time.isDay
+    property bool isNight: Cfg.time.isNight
 
     Settings {
         id: values
 
         property bool autoNight: autoNightMode
-        property bool autoSetNight: setNight
         property int nightTemp: tempNightVal
     }
 
@@ -37,9 +36,15 @@ Singleton {
         autoNightMode = values.autoNight;
         nightTemperature = values.nightTemp;
         tempNightVal = values.nightTemp;
-        setNight = values.autoSetNight
 
         Weather.init.connect(autoNight)
+    }
+
+    onIsNightChanged: {
+        if(isNight && autoNightMode) {
+            changeTemp.running = true;
+            setNight = true;
+        }
     }
 
     onTempNightValChanged: {

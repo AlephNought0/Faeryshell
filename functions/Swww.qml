@@ -84,7 +84,7 @@ Item {
             SWWW_TRANSITION_ANGLE: 30,
             SWWW_TRANSITION: "wipe"
         })
-    }
+    } 
 
     function getWallpaper() {
         if(Weather.isSnowing) {

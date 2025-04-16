@@ -53,28 +53,28 @@ Singleton {
                 var weatherCode = json.current.weather_code;
                 var sunrise = new Date(json.daily.sunrise[0]);
                 var sunset = new Date(json.daily.sunset[0]);
-                var evening = new Date(sunset.getTime() - 3600000);
+                var night = new Date(sunset.getTime() + 1980000); //Sometimes it will be off by few minutes
                 var currTime = new Date();
                 var name = "";
                 temp = json.current.temperature_2m;
-                Cfg.time.isDay = json.current.is_day;
                 isSleet = false;
                 isFoggy = false;
                 isSnowing = false;
                 isRaining = false;
     
-                if(currTime >= sunrise && currTime <= evening) {
+                if(currTime >= sunrise && currTime <= sunset) {
                     Cfg.time.part = "day";
                     name = "sunny";
                 }
 
-                else if(currTime >= evening && currTime <= sunset) {
+                else if(currTime >= sunset && currTime <= night) {
                     Cfg.time.part = "evening";
                     name = "sunny";
                 }
 
                 else {
                     Cfg.time.part = "night";
+                    Cfg.time.isNight = true;
                     name = "night";
                 }
 
