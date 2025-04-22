@@ -3,11 +3,11 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 import QtQuick
 
-import "./bar/left"
-import "./bar/mid"
-import "./bar/right"
-import "./bar/main"
-import "./functions"
+import "bar/left"
+import "bar/mid"
+import "bar/right"
+import "bar/main"
+import "functions"
 
 ShellRoot {
     Variants {
@@ -31,6 +31,13 @@ ShellRoot {
 
                 property var modelData
 
+                Component.onCompleted: {
+                    Swww
+                    Mpris
+                    Weather
+                    Display
+                }
+
                 Lbar {
                     anchors {
                         bottom: parent.bottom
@@ -53,8 +60,6 @@ ShellRoot {
                         rightMargin: 10
                     }
                 }
-
-                Swww{}
 
                 LazyLoader {
                     id: mediaPopup

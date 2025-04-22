@@ -13,12 +13,11 @@ Singleton {
     property string longitude
     property int min: parseInt(Cfg.time.minutes)
     property string weather: " "
+    property bool init: false
     property bool isRaining: false
     property bool isSnowing: false
     property bool isFoggy: false
     property bool isSleet: false
-
-    signal init()
 
     onMinChanged: {
         if(min % 2) {
@@ -217,7 +216,11 @@ Singleton {
                         break;
                 }
 
-                init();
+                if(!init) {
+                    init = true
+                    Display.autoNight();
+                    Swww.getWallpaper();
+                }
             }
         }
     }

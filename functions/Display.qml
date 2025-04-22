@@ -28,16 +28,12 @@ Singleton {
             changeTemp.running = true;
             setNight = true;
         }
-
-        Weather.init.disconnect(autoNight)
     }
 
     Component.onCompleted: {
         autoNightMode = values.autoNight;
         nightTemperature = values.nightTemp;
         tempNightVal = values.nightTemp;
-
-        Weather.init.connect(autoNight)
     }
 
     onIsNightChanged: {

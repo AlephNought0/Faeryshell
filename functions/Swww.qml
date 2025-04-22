@@ -1,3 +1,5 @@
+pragma Singleton
+
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -5,7 +7,7 @@ import Qt.labs.folderlistmodel
 
 import ".."
 
-Item {
+Singleton {
     id: root
 
     property string image: ""
@@ -14,12 +16,8 @@ Item {
 
     onMinutesChanged: {
         if(minutes % 4 === 0) {
-            getWallpaper()
+            getWallpaper();
         }
-    }
-
-    Component.onCompleted: {
-        Weather.init.connect(getWallpaper)
     }
 
     onImageChanged: {
@@ -34,7 +32,6 @@ Item {
             if(folderModel.count > 0) {
                 var randomIndex = Math.floor(Math.random() * folderModel.count)
                 var item = folderModel.get(randomIndex, "filePath")
-                
                 root.image = item
                 wallpaper.running = true
             }
@@ -105,8 +102,7 @@ Item {
 
         else {
             folderModel.folder = Qt.resolvedUrl(`../wallpapers/${currentTime}`)
+            folderModel.folderChanged();
         }
-
-        Weather.init.disconnect(getWallpaper) 
     }
 }
