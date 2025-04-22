@@ -102,7 +102,6 @@ Singleton {
 
         else {
             folderModel.folder = Qt.resolvedUrl(`../wallpapers/${currentTime}`)
-            folderModel.folderChanged();
         }
     }
 }
