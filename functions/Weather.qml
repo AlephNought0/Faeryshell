@@ -131,6 +131,24 @@ Singleton {
                         isSleet = true;
                         break;
 
+                    case 61:
+                        icon = `../../icons/${name}_light_raining.svg`;
+                        weather = "Light rain";
+                        isRaining = true;
+                        break;
+
+                    case 63:
+                        icon = `../../icons/${name}_raining.svg`;
+                        weather = "Rain";
+                        isRaining = true;
+                        break;
+
+                    case 65:
+                        icon = `../../icons/heavy_raining.svg`;
+                        weather = "Heavy rain";
+                        isRaining = true;
+                        break;
+
                     case 66:
                         icon = `../../icons/sleet.svg`; //Yeah something better too
                         weather = "Light icy rain";
