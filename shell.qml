@@ -17,8 +17,8 @@ ShellRoot {
             
             PanelWindow {
                 id: panel
-                height: 40
-                width: screen.width
+                implicitHeight: 40
+                implicitWidth: screen.width
                 screen: modelData
                 WlrLayershell.namespace: "ohio"
                 WlrLayershell.keyboardFocus: "OnDemand"

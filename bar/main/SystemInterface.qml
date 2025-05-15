@@ -15,8 +15,8 @@ PopupWindow {
     anchor.rect.x: panel.width - width
     anchor.rect.y: panel.height + 15
     anchor.window: panel
-    width: systemInterface.width
-    height: 500
+    implicitWidth: systemInterface.width
+    implicitHeight: 500
     color: "transparent"
 
     property bool targetVisible: false

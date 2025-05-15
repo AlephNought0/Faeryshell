@@ -5,7 +5,7 @@ import "../../"
 
 ColumnLayout {
     id: calendar
-    spacing: 25
+    spacing: 15
 
     RowLayout {
         spacing: 100

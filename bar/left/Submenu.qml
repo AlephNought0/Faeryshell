@@ -10,8 +10,8 @@ PopupWindow {
     anchor.rect.x: 0
     anchor.rect.y: 0
     anchor.window: panel
-    width: menuColumn.width + 22
-    height: menuColumn.height + 22
+    implicitWidth: menuColumn.width + 22
+    implicitHeight: menuColumn.height + 22
     color: "transparent"
 
     required property var items

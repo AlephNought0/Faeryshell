@@ -66,7 +66,7 @@ Item {
         width: parent.width
         anchors {
             bottom: stack.top
-            bottomMargin: 30
+            bottomMargin: 35
         }
 
         property string currentItem: "calendar"
@@ -168,8 +168,9 @@ Item {
         id: stack
         initialItem: calendar
         width: parent.width
+        height: root.height - timeWidget.height - 60
         anchors.horizontalCenter: parent.horizontalCenter 
-        y: (root.height / 2 - 370 / 2) + 20
+        y: timeWidget.height + 60
 
         replaceEnter: Transition {
             PropertyAnimation {
