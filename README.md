@@ -1,4 +1,9 @@
-This is my personal quickshell configuration. More explanations and intentions will be written as this configuration comes close to an end.
+> [!Caution]
+> Currently I am using Niri instead of Hyprland. Quickshell doesn't seem to fully support Niri as of now.
+> 
+> I will either figure out how to make this configuration work in Niri with quickshell, convert this configuration to a different shell or create my own shell.
+>
+> For now though, I am not actively working on this configuration.
 
 > [!Warning]
 > This configuration uses a patched version of quickshell. On top of that this configuration is not yet finished.
